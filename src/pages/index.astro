@@ -119,4 +119,35 @@ const shelfImages: Record<string, string> = {
     </blockquote>
     <p class="mt-4 text-[14px] text-muted">Jamie R., customer since 2024</p>
   </section>
+
+  <!-- Theme colophon: this store is the product -->
+  <section class="mx-auto max-w-6xl px-5 pb-8">
+    <div class="grid gap-10 rounded-2xl border border-pine-deep bg-pine p-8 text-white sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
+      <div>
+        <p class="text-[13px] font-medium text-white/70">njx-store · free ecommerce theme for Astro</p>
+        <h2 class="mt-3 font-display text-[clamp(26px,3.5vw,38px)] font-bold leading-tight tracking-tight">
+          This whole store is a theme. Take it.
+        </h2>
+        <p class="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-white/85">
+          Everything you just clicked — cart, search, favorites, dark mode, checkout — is
+          njx-store Lite, a static storefront you can fork today. Point one env var at your
+          Shopify store and these same pages rebuild from your real catalog, hosted checkout included.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="https://github.com/njbSaab/astro-njx-store" class="rounded-md bg-white px-6 py-3.5 text-[15px] font-semibold text-pine hover:bg-white/90">
+            Get the theme on GitHub
+          </a>
+          <a href="/about#theme" class="rounded-md border border-white/40 px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-white/10">
+            How it works
+          </a>
+        </div>
+      </div>
+      <ul class="grid gap-3 rounded-xl bg-pine-deep/60 p-6 text-[14px] leading-relaxed sm:p-7">
+        <li class="flex gap-3"><span class="mt-0.5 text-white/60">01</span><span><strong class="font-semibold">Astro 5 + Tailwind v4</strong> — 18 static pages, zero client framework</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-white/60">02</span><span><strong class="font-semibold">Node.js build</strong> — data layer runs at build time, ships pure HTML</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-white/60">03</span><span><strong class="font-semibold">Shopify Storefront API</strong> — live products, cart and hosted checkout</span></li>
+        <li class="flex gap-3"><span class="mt-0.5 text-white/60">04</span><span><strong class="font-semibold">Cloudflare Pages</strong> — deploys in seconds on the free tier</span></li>
+      </ul>
+    </div>
+  </section>
 </Layout>
