@@ -33,6 +33,7 @@ heavyweight theme, or building cart logic from scratch.
 - 📄 **18 pages total** — about, contacts, FAQ, account (sign in / create account UI),
   privacy, terms, honest 404
 - 📱 **Responsive** — floating card header/footer, drawer cart & menu on mobile
+- 📝 **All copy in two constants files** — rebrand every text on the site without touching markup
 - ⚡️ **Zero client framework** — a few small vanilla scripts; no React/Vue/hydration cost
 
 | Light | Dark |
@@ -85,16 +86,23 @@ comfortably in Cloudflare's free tier.
 
 ## Make it yours
 
+- **All copy in two files** — every piece of text on the site lives in
+  `src/constants/components.ts` (header, footer, drawers, cart, search) and
+  `src/constants/pages.ts` (home, about, FAQ, product page, …). Rebrand the whole store —
+  name, links, announcements, FAQ answers, legal pages — without touching a single component.
 - **Brand & colors** — design tokens in `src/styles/global.css` (`@theme` block, dark
   overrides in `.dark`). Swap the two logo files in `public/logo/`.
 - **Catalog** — `src/data/mock-catalog.json` + photos in `public/products/`, or connect Shopify.
-- **Copy & pages** — plain `.astro` files in `src/pages/`, one component per section.
-- **Layout** — header, footer, cart drawer, search and menu all live in `src/layouts/Layout.astro`.
+- **Layout & sections** — plain `.astro` files: header/footer/drawers in
+  `src/layouts/Layout.astro`, one file per page in `src/pages/`.
 
 ## Project structure
 
 ```
 src/
+├── constants/
+│   ├── components.ts           # all copy for the shell: header, footer, cart, search…
+│   └── pages.ts                # all copy per page: home, about, FAQ, legal…
 ├── data/mock-catalog.json      # demo products & collections
 ├── layouts/Layout.astro        # header, footer, cart/nav drawers, search
 ├── components/ProductCard.astro
