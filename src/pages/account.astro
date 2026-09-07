@@ -4,7 +4,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Account — Offhours" description="Sign in to your Offhours account or create a new one.">
+<Layout title="Account — njX Shop" description="Sign in to your njX Shop account or create a new one.">
   <section class="mx-auto max-w-md px-5 py-16">
     <div class="rounded-xl border border-line bg-tile/40 p-8">
       <div class="grid grid-cols-2 gap-1 rounded-md bg-tile p-1 text-[14px] font-medium" role="tablist" aria-label="Auth mode">
@@ -98,7 +98,7 @@ import Layout from '../layouts/Layout.astro';
         nameField.classList.toggle('hidden', !reg);
         nameField.classList.toggle('block', reg);
         forgot.classList.toggle('hidden', reg);
-        title.textContent = reg ? 'Join Offhours' : 'Welcome back';
+        title.textContent = reg ? 'Join njX Shop' : 'Welcome back';
         sub.textContent = reg ? 'One account for orders, returns and early drops.' : 'Orders, addresses and faster checkout.';
         submit.textContent = reg ? 'Create account' : 'Sign in';
         note.classList.add('hidden');

@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* ── Offhours design tokens ─────────────────────────────────────
+/* ── njX Shop design tokens ─────────────────────────────────────
    Paper-cool background + ink text + pine green brand accent.
    Headlines: Bricolage Grotesque · UI/body: Inter (see Layout head). */
 @theme {
@@ -30,6 +30,21 @@
 }
 .dark img {
   filter: brightness(0.92);
+}
+
+/* Logo swap: dark mark on light theme, light mark on dark theme */
+.logo-on-dark {
+  display: none;
+}
+.dark .logo-on-dark {
+  display: block;
+}
+.dark .logo-on-light {
+  display: none;
+}
+.dark .logo-on-dark,
+.logo-on-light {
+  filter: none;
 }
 
 html {
