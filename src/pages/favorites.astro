@@ -42,7 +42,7 @@ import Layout from '../layouts/Layout.astro';
       grid.innerHTML = items
         .map(
           (p) => `
-          <a href="/products/${p.handle}" class="group block">
+          <a href="/products/${p.handle}" class="group block rounded-lg transition hover:bg-tile/60">
             <div class="relative overflow-hidden rounded-lg bg-tile">
               <img src="${p.image}" alt="${p.title}" class="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.03]" loading="lazy"/>
               <button type="button" data-fav-toggle="${p.handle}" onclick="event.preventDefault()"
@@ -53,9 +53,9 @@ import Layout from '../layouts/Layout.astro';
                 </svg>
               </button>
             </div>
-            <div class="mt-3 flex items-baseline justify-between gap-3 rounded-lg border border-line bg-tile/60 px-4 py-3">
+            <div class="flex flex-col justify-center gap-4 px-4 py-3">
               <h3 class="text-[15px] font-medium group-hover:underline group-hover:underline-offset-4">${p.title}</h3>
-              <p class="shrink-0 text-[15px] text-muted">$${p.price}</p>
+              <p class="text-[18px] text-muted">$${p.price}</p>
             </div>
           </a>`,
         )
