@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { commerce } from '../../lib/commerce';
+
+export async function getStaticPaths() {
+  const collections = await commerce.listCollections();
+  return collections.map((c) => ({ params: { handle: c.handle }, props: { collection: c } }));
+}
+
+const { collection } = Astro.props;
+const products = await commerce.listProducts({ collection: collection.handle });
+---
+
+<Layout title={`${collection.title} — njX Store`} description={collection.description}>
+  <h1 class="text-3xl font-black">{collection.title}</h1>
+  <p class="mt-2 max-w-xl text-neutral-400">{collection.description}</p>
+  <div class="mt-8 grid grid-cols-2 gap-5 md:grid-cols-4">
+    {products.map((p) => <ProductCard product={p} />)}
+  </div>
+</Layout>

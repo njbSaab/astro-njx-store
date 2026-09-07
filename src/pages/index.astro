@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { commerce, providerName } from '../lib/commerce';
+
+const [products, collections] = await Promise.all([
+  commerce.listProducts({ limit: 8 }),
+  commerce.listCollections(),
+]);
+---
+
+<Layout>
+  <p class="mb-2 text-xs uppercase tracking-widest text-neutral-500">
+    provider: {providerName}
+  </p>
+  <h1 class="text-3xl font-black">Storefront skeleton</h1>
+
+  <h2 class="mt-10 mb-4 text-xl font-bold">Collections</h2>
+  <div class="flex flex-wrap gap-3">
+    {collections.map((c) => (
+      <a href={`/collections/${c.handle}`} class="rounded-full border border-neutral-700 px-4 py-1.5 text-sm hover:border-neutral-400">
+        {c.title}
+      </a>
+    ))}
+  </div>
+
+  <h2 class="mt-10 mb-4 text-xl font-bold">Products</h2>
+  <div class="grid grid-cols-2 gap-5 md:grid-cols-4">
+    {products.map((p) => <ProductCard product={p} />)}
+  </div>
+</Layout>

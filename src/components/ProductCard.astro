@@ -1,0 +1,26 @@
+---
+import type { Product } from '../lib/commerce';
+
+interface Props {
+  product: Product;
+}
+const { product } = Astro.props;
+const img = product.images[0];
+const onSale = !!product.compareAtPrice;
+---
+
+<a
+  href={`/products/${product.handle}`}
+  class="group block overflow-hidden rounded-xl border border-neutral-800 transition hover:border-neutral-600"
+>
+  <div class="aspect-square bg-neutral-900">
+    {img && <img src={img.src} alt={img.alt} class="h-full w-full object-cover transition group-hover:scale-105" loading="lazy" />}
+  </div>
+  <div class="p-4">
+    <h3 class="font-semibold">{product.title}</h3>
+    <p class="mt-1 text-sm text-neutral-400">
+      ${product.price.amount}
+      {onSale && <s class="ml-2 text-neutral-600">${product.compareAtPrice!.amount}</s>}
+    </p>
+  </div>
+</a>
