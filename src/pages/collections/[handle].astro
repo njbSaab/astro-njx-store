@@ -21,7 +21,7 @@ const tags = [...new Set(products.flatMap((p) => p.tags))].sort();
     <h1 class="font-display text-[clamp(32px,5vw,52px)] font-extrabold tracking-tight">{collection.title}</h1>
     <p class="mt-3 max-w-[52ch] text-[16px] leading-relaxed text-muted">{collection.description}</p>
 
-    <div class="mt-7 flex flex-wrap gap-2 border-b border-line pb-6">
+    <div class="mt-7 flex flex-wrap gap-2 pb-6">
       {all.filter((c) => c.handle !== 'frontpage').map((c) => (
         <a
           href={`/collections/${c.handle}`}
@@ -38,12 +38,12 @@ const tags = [...new Set(products.flatMap((p) => p.tags))].sort();
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-5 py-8">
+  <section class="mx-auto max-w-6xl px-5">
     {products.length === 0 ? (
       <p class="py-16 text-center text-muted">Nothing here yet — check the other collections.</p>
     ) : (
       <div data-catalog>
-        <div class="flex flex-wrap items-center justify-between gap-4 pb-6">
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-paper/90 px-5 py-3.5">
           {tags.length > 1 ? (
             <div class="flex flex-wrap gap-2" data-tag-filter role="group" aria-label="Filter by tag">
               <button
