@@ -299,9 +299,12 @@ const searchIndex = JSON.stringify(
           box.innerHTML = lines
             .map(
               (l) => `
-              <div class="flex gap-4 border-b border-line py-4" data-line="${l.variantId}">
+              <div class="relative flex gap-4 border-b border-line py-4" data-line="${l.variantId}">
+                <button class="absolute right-0 top-4 rounded-md p-1.5 text-muted transition hover:bg-tile hover:text-ink" data-remove aria-label="Remove ${l.title} from cart">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
                 ${l.image ? `<img src="${l.image.src}" alt="" class="h-20 w-20 rounded-md bg-tile object-cover"/>` : ''}
-                <div class="flex-1">
+                <div class="flex-1 pr-8">
                   <p class="text-[15px] font-medium">${l.title}</p>
                   <p class="text-[13px] text-muted">${l.variantTitle}</p>
                   <div class="mt-2 flex items-center gap-3">
@@ -416,7 +419,14 @@ const searchIndex = JSON.stringify(
       });
 
       $('cart-lines').addEventListener('click', (e) => {
-        const btn = (e.target as HTMLElement).closest('[data-qty]') as HTMLElement | null;
+        const target = e.target as HTMLElement;
+        const removeBtn = target.closest('[data-remove]');
+        if (removeBtn) {
+          const row = removeBtn.closest('[data-line]') as HTMLElement;
+          setQuantity(row.dataset.line!, 0);
+          return;
+        }
+        const btn = target.closest('[data-qty]') as HTMLElement | null;
         if (!btn) return;
         const row = btn.closest('[data-line]') as HTMLElement;
         const line = cartLines.get().find((l) => l.variantId === row.dataset.line);
