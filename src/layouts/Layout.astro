@@ -65,16 +65,6 @@ const searchIndex = JSON.stringify(
       <div class="overflow-hidden rounded-2xl border border-line bg-paper/90 shadow-sm backdrop-blur">
       <nav class="flex h-16 items-center justify-between px-5">
         <div class="flex items-center gap-3">
-          <button
-            id="menu-button"
-            class="-ml-1 rounded-md p-2 hover:bg-tile sm:hidden"
-            aria-label="Open menu"
-            aria-expanded="false"
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-              <path d="M3 5.5h14M3 10h14M3 14.5h14" />
-            </svg>
-          </button>
           <a href="/" class="flex items-center gap-2.5">
             <img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-8 w-8 rounded-lg" />
             <img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-8 w-8 rounded-lg" />
@@ -120,6 +110,11 @@ const searchIndex = JSON.stringify(
             class="hidden rounded-full bg-pine px-2 py-0.5 text-[12px] font-semibold text-white"
           ></span>
         </button>
+        <button id="nav-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Open menu" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M3 5.5h14M3 10h14M3 14.5h14" />
+          </svg>
+        </button>
         </div>
       </nav>
       <!-- search panel -->
@@ -142,13 +137,6 @@ const searchIndex = JSON.stringify(
           <p id="search-empty" class="hidden py-6 text-center text-[14px] text-muted">Nothing found — try “hoodie”, “walnut” or “coffee”.</p>
         </div>
       </div>
-      <!-- mobile menu -->
-      <div id="mobile-menu" class="hidden border-t border-line bg-paper sm:hidden">
-        <a href="/collections/apparel" class="block border-b border-line px-5 py-3.5 text-[16px] font-medium">Apparel</a>
-        <a href="/collections/desk" class="block border-b border-line px-5 py-3.5 text-[16px] font-medium">Desk & setup</a>
-        <a href="/collections/coffee" class="block px-5 py-3.5 text-[16px] font-medium">Coffee</a>
-      </div>
-      </div>
     </header>
 
     <slot />
@@ -163,13 +151,22 @@ const searchIndex = JSON.stringify(
             every product here is fictional, the checkout is real.
           </p>
         </div>
-        <nav class="grid grid-cols-2 gap-8 text-[14px]" aria-label="Footer">
+        <nav class="grid grid-cols-2 gap-8 text-[14px] sm:grid-cols-3" aria-label="Footer">
           <div>
             <p class="font-semibold">Shop</p>
             <ul class="mt-3 space-y-2 text-muted">
               <li><a href="/collections/apparel" class="hover:text-ink">Apparel</a></li>
               <li><a href="/collections/desk" class="hover:text-ink">Desk & setup</a></li>
               <li><a href="/collections/coffee" class="hover:text-ink">Coffee</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-semibold">Pages</p>
+            <ul class="mt-3 space-y-2 text-muted">
+              <li><a href="/about" class="hover:text-ink">About</a></li>
+              <li><a href="/contacts" class="hover:text-ink">Contacts</a></li>
+              <li><a href="/faq" class="hover:text-ink">FAQ</a></li>
+              <li><a href="/account" class="hover:text-ink">Account</a></li>
             </ul>
           </div>
           <div>
@@ -240,6 +237,31 @@ const searchIndex = JSON.stringify(
           Checkout
         </button>
         <p id="cart-note" class="mt-2 hidden text-center text-[13px] text-muted"></p>
+      </div>
+    </aside>
+
+    <!-- ── Nav drawer ── -->
+    <div id="nav-backdrop" class="fixed inset-0 z-40 bg-ink/40" aria-hidden="true"></div>
+    <aside id="nav-drawer" class="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-paper shadow-2xl" aria-label="Site navigation">
+      <div class="flex items-center justify-between border-b border-line px-6 py-5">
+        <h2 class="font-display text-xl font-bold">Menu</h2>
+        <button id="nav-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close menu">✕</button>
+      </div>
+      <nav class="flex-1 overflow-y-auto px-4 py-4 text-[16px] font-medium">
+        <a href="/" class="block rounded-md px-3 py-3 hover:bg-tile">Home</a>
+        <div class="mb-1 ml-3 border-l border-line pl-3">
+          <a href="/collections/apparel" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Apparel</a>
+          <a href="/collections/desk" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Desk &amp; setup</a>
+          <a href="/collections/coffee" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Coffee</a>
+        </div>
+        <a href="/about" class="block rounded-md px-3 py-3 hover:bg-tile">About</a>
+        <a href="/contacts" class="block rounded-md px-3 py-3 hover:bg-tile">Contacts</a>
+        <a href="/faq" class="block rounded-md px-3 py-3 hover:bg-tile">FAQ</a>
+        <a href="/account" class="block rounded-md px-3 py-3 hover:bg-tile">Account</a>
+      </nav>
+      <div class="border-t border-line px-6 py-5 text-[13px] text-muted">
+        Built with <a href="https://njxui.dev" class="underline underline-offset-2 hover:text-ink">njX UI</a> ·
+        <a href="https://github.com/njbSaab/astro-njx-store" class="underline underline-offset-2 hover:text-ink">⭐ GitHub</a>
       </div>
     </aside>
 
@@ -355,12 +377,12 @@ const searchIndex = JSON.stringify(
       $('search-button').addEventListener('click', () => toggleSearch());
       searchInput.addEventListener('input', () => renderSearch(searchInput.value.trim().toLowerCase()));
 
-      const menuBtn = document.getElementById('menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-      menuBtn?.addEventListener('click', () => {
-        const hidden = mobileMenu!.classList.toggle('hidden');
-        menuBtn.setAttribute('aria-expanded', String(!hidden));
-      });
+
+      function openNav() { document.body.classList.add('nav-open'); }
+      function closeNav() { document.body.classList.remove('nav-open'); }
+      $('nav-button').addEventListener('click', openNav);
+      $('nav-close').addEventListener('click', closeNav);
+      $('nav-backdrop').addEventListener('click', closeNav);
 
       $('cart-button').addEventListener('click', open);
       $('cart-close').addEventListener('click', close);
@@ -376,6 +398,7 @@ const searchIndex = JSON.stringify(
         if (e.key === 'Escape') {
           close();
           closeThanks();
+          closeNav();
           toggleSearch(false);
         }
         if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {

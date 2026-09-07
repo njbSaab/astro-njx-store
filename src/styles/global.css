@@ -74,23 +74,28 @@ input[type='radio'] {
   }
 }
 
-/* Cart drawer open state */
-body.cart-open {
+/* Cart & nav drawers open state */
+body.cart-open,
+body.nav-open {
   overflow: hidden;
 }
-#cart-backdrop {
+#cart-backdrop,
+#nav-backdrop {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
 }
-#cart-drawer {
+#cart-drawer,
+#nav-drawer {
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 }
-body.cart-open #cart-backdrop {
+body.cart-open #cart-backdrop,
+body.nav-open #nav-backdrop {
   opacity: 1;
   pointer-events: auto;
 }
-body.cart-open #cart-drawer {
+body.cart-open #cart-drawer,
+body.nav-open #nav-drawer {
   transform: translateX(0);
 }

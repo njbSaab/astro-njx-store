@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const NUMBERS = [
+  { num: '2019', label: 'first tee printed' },
+  { num: '14k', label: 'orders shipped' },
+  { num: '3', label: 'people in the team' },
+  { num: '1', label: 'small warehouse' },
+];
+---
+
+<Layout title="About — njX Shop" description="Who makes njX Shop: three people, one warehouse, goods for the hours nobody sees.">
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-8 pt-12 md:grid-cols-[1.1fr_1fr]">
+    <div>
+      <h1 class="font-display text-[clamp(36px,5vw,60px)] font-extrabold leading-[1.02] tracking-tight">
+        Built for the hours nobody sees.
+      </h1>
+      <p class="mt-5 max-w-[52ch] text-[16px] leading-relaxed text-muted">
+        njX Shop started as a side table of leftover conference tees and one bag of
+        over-roasted beans. It grew into a small catalog of things we actually use
+        every day: clothes that survive the wash, wood that outlives the laptop on
+        top of it, coffee that ships the week it's roasted.
+      </p>
+      <p class="mt-4 max-w-[52ch] text-[16px] leading-relaxed text-muted">
+        We're three people and one warehouse. No growth team, no seasonal drops —
+        a product joins the catalog when we've used it for a month and still like it.
+      </p>
+    </div>
+    <div class="overflow-hidden rounded-xl bg-tile">
+      <img src="/products/hero.jpg" alt="The desk where njX Shop gets planned" class="aspect-[4/5] w-full object-cover" />
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 pb-8">
+    <div class="grid gap-8 rounded-2xl border border-line bg-tile/60 p-8 text-center sm:grid-cols-4 sm:p-10">
+      {NUMBERS.map((n) => (
+        <div>
+          <p class="font-display text-3xl font-bold text-pine">{n.num}</p>
+          <p class="mt-1 text-[14px] text-muted">{n.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 text-center">
+    <h2 class="font-display text-2xl font-bold">Want to say hi?</h2>
+    <p class="mt-3 text-[15px] text-muted">We answer every email ourselves — usually within a day.</p>
+    <a href="/contacts" class="mt-6 inline-block rounded-md bg-pine px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-pine-deep">
+      Contact us
+    </a>
+  </section>
+</Layout>
