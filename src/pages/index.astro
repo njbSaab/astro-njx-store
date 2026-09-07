@@ -147,7 +147,39 @@ const shelfImages: Record<string, string> = {
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">02</span><span><strong class="font-semibold">Node.js build</strong> — data layer runs at build time, ships pure HTML</span></li>
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">03</span><span><strong class="font-semibold">Shopify Storefront API</strong> — live products, cart and hosted checkout</span></li>
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">04</span><span><strong class="font-semibold">Cloudflare Pages</strong> — deploys in seconds on the free tier</span></li>
+        <li>
+          <button
+            type="button"
+            data-copy-env="COMMERCE_PROVIDER=shopify"
+            class="group/copy mt-2 flex w-full items-center justify-between gap-3 rounded-md bg-black/25 px-4 py-2.5 text-left font-mono text-[13px] text-white/90 transition hover:bg-black/35"
+            aria-label="Copy COMMERCE_PROVIDER=shopify to clipboard"
+          >
+            <span>COMMERCE_PROVIDER=<span class="text-white">shopify</span></span>
+            <span data-copy-icon class="text-white/60 transition group-hover/copy:text-white">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" />
+              </svg>
+            </span>
+            <span data-copy-done class="hidden text-[12px] font-sans font-semibold text-white">Copied ✓</span>
+          </button>
+        </li>
       </ul>
     </div>
   </section>
+
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-env]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(btn.dataset.copyEnv!);
+        const icon = btn.querySelector('[data-copy-icon]')!;
+        const done = btn.querySelector('[data-copy-done]')!;
+        icon.classList.add('hidden');
+        done.classList.remove('hidden');
+        setTimeout(() => {
+          done.classList.add('hidden');
+          icon.classList.remove('hidden');
+        }, 1600);
+      });
+    });
+  </script>
 </Layout>
