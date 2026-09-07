@@ -70,6 +70,14 @@ const searchIndex = JSON.stringify(
             <img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-8 w-8 rounded-lg" />
             <span class="font-display text-[21px] font-bold tracking-tight">njx-shop</span>
           </a>
+          <button id="theme-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
+            <svg data-icon-moon width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            </svg>
+            <svg data-icon-sun class="hidden" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+            </svg>
+          </button>
         </div>
         <div class="hidden items-center gap-1 text-[15px] text-muted sm:flex">
           <a href="/collections/apparel" class="rounded-md px-3 py-2 hover:bg-tile hover:text-ink">Apparel</a>
@@ -82,25 +90,17 @@ const searchIndex = JSON.stringify(
             <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
           </svg>
         </button>
+        <a href="/account" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+          </svg>
+        </a>
         <a href="/favorites" class="relative rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Favorites">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20.5c-5.5-3.6-8.5-6.9-8.5-10.4A4.6 4.6 0 0 1 8.1 5.4c1.6 0 3 .8 3.9 2.1a4.7 4.7 0 0 1 3.9-2.1 4.6 4.6 0 0 1 4.6 4.7c0 3.5-3 6.8-8.5 10.4z" />
           </svg>
           <span id="fav-count" class="absolute -right-0.5 -top-0.5 hidden rounded-full bg-pine px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white"></span>
         </a>
-        <a href="/account" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
-          </svg>
-        </a>
-        <button id="theme-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
-          <svg data-icon-moon width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
-          </svg>
-          <svg data-icon-sun class="hidden" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
-          </svg>
-        </button>
         <button
           id="cart-button"
           class="relative flex items-center gap-1.5 rounded-md border border-line px-3.5 py-2.5 hover:border-ink"
@@ -172,7 +172,6 @@ const searchIndex = JSON.stringify(
               <li><a href="/about" class="hover:text-ink hover:underline underline-offset-4">About</a></li>
               <li><a href="/contacts" class="hover:text-ink hover:underline underline-offset-4">Contacts</a></li>
               <li><a href="/faq" class="hover:text-ink hover:underline underline-offset-4">FAQ</a></li>
-              <li><a href="/account" class="hover:text-ink hover:underline underline-offset-4">Account</a></li>
             </ul>
           </div>
           <div>
@@ -184,6 +183,20 @@ const searchIndex = JSON.stringify(
             </ul>
           </div>
         </nav>
+      </div>
+      <!-- ── Built with: технологический стек темы ── -->
+      <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-line px-8 py-5 sm:px-10">
+        <div class="flex flex-wrap items-center gap-5 text-[13px] text-muted">
+          <a href="/privacy" class="hover:text-ink hover:underline underline-offset-4">Privacy Policy</a>
+          <a href="/terms" class="hover:text-ink hover:underline underline-offset-4">Terms of Service</a>
+        </div>
+        <div class="tech-row flex flex-wrap items-center gap-7">
+          <img src="/tech/astro.png" alt="Astro" title="Astro" class="h-9 w-auto" loading="lazy" />
+          <img src="/tech/tailwind.png" alt="Tailwind CSS" title="Tailwind CSS" class="h-7 w-auto" loading="lazy" />
+          <img src="/tech/nodejs.png" alt="Node.js" title="Node.js" class="h-9 w-auto" loading="lazy" />
+          <img src="/tech/shopify.png" alt="Shopify" title="Shopify" class="h-9 w-auto" loading="lazy" />
+          <img src="/tech/cloudflare.png" alt="Cloudflare" title="Cloudflare" class="h-9 w-auto" loading="lazy" />
+        </div>
       </div>
       </div>
     </footer>
