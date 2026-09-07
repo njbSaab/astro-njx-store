@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { commerce } from '../lib/commerce';
+import { HOME as T } from '../constants/pages';
 
 const [products, collections] = await Promise.all([
   commerce.listProducts({ limit: 8 }),
@@ -19,30 +20,27 @@ const shelfImages: Record<string, string> = {
   <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-4 pt-6 md:grid-cols-[1.1fr_1fr] md:pb-16 md:pt-20">
     <div>
       <h1 class="font-display text-[clamp(40px,6vw,72px)] font-extrabold leading-[0.98] tracking-tight">
-        Good gear for long builds.
+        {T.hero.title}
       </h1>
-      <p class="mt-5 max-w-[44ch] text-[17px] leading-relaxed text-muted">
-        Heavyweight tees, walnut desk goods and coffee roasted the week it ships.
-        Small-batch things for the hours nobody sees.
-      </p>
+      <p class="mt-5 max-w-[44ch] text-[17px] leading-relaxed text-muted">{T.hero.text}</p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="/collections/apparel" class="rounded-md bg-pine px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-pine-deep">
-          Shop apparel
+        <a href={T.hero.ctaPrimary.href} class="rounded-md bg-pine px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-pine-deep">
+          {T.hero.ctaPrimary.label}
         </a>
-        <a href="/collections/coffee" class="rounded-md border border-ink px-6 py-3.5 text-[15px] font-semibold hover:bg-tile">
-          Fresh coffee
+        <a href={T.hero.ctaSecondary.href} class="rounded-md border border-ink px-6 py-3.5 text-[15px] font-semibold hover:bg-tile">
+          {T.hero.ctaSecondary.label}
         </a>
       </div>
-      <p class="mt-6 text-[13px] text-muted">Ships worldwide from one small warehouse. 30-day returns, no forms.</p>
+      <p class="mt-6 text-[13px] text-muted">{T.hero.note}</p>
     </div>
     <div class="overflow-hidden rounded-xl bg-tile">
-      <img src="/products/hero.jpg" alt="Walnut desk setup with laptop and coffee" class="aspect-[4/5] w-full object-cover" />
+      <img src={T.hero.image.src} alt={T.hero.image.alt} class="aspect-[4/5] w-full object-cover" />
     </div>
   </section>
 
   <!-- Collections shelf -->
   <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
-    <h2 class="font-display text-3xl font-bold tracking-tight">Shop by collection</h2>
+    <h2 class="font-display text-3xl font-bold tracking-tight">{T.collections.title}</h2>
     <div class="mt-7 grid gap-5 sm:grid-cols-3">
       {collections.filter((c) => shelfImages[c.handle]).map((c) => (
         <a href={`/collections/${c.handle}`} class="group block">
@@ -64,8 +62,8 @@ const shelfImages: Record<string, string> = {
   <!-- Products -->
   <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
     <div class="flex items-baseline justify-between">
-      <h2 class="font-display text-3xl font-bold tracking-tight">Everything we make</h2>
-      <p class="text-[14px] text-muted">{products.length} products</p>
+      <h2 class="font-display text-3xl font-bold tracking-tight">{T.products.title}</h2>
+      <p class="text-[14px] text-muted">{products.length} {T.products.countLabel}</p>
     </div>
     <div class="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 md:grid-cols-4">
       {products.map((p) => <ProductCard product={p} />)}
@@ -81,10 +79,8 @@ const shelfImages: Record<string, string> = {
             <path d="m12 3 9 5-9 5-9-5 9-5z" /><path d="m3 12.5 9 5 9-5" /><path d="m3 17 9 5 9-5" />
           </svg>
         </span>
-        <h3 class="mt-4 text-[16px] font-semibold">Made to be used up</h3>
-        <p class="mt-2 text-[14px] leading-relaxed text-muted">
-          220 gsm cotton, solid walnut, merino felt. Materials that wear in, not out.
-        </p>
+        <h3 class="mt-4 text-[16px] font-semibold">{T.values[0].title}</h3>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">{T.values[0].text}</p>
       </div>
       <div>
         <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-pine-soft text-pine">
@@ -92,10 +88,8 @@ const shelfImages: Record<string, string> = {
             <ellipse cx="12" cy="12" rx="7" ry="9" /><path d="M12 3c-3 3.5-3 14.5 0 18" transform="rotate(35 12 12)" />
           </svg>
         </span>
-        <h3 class="mt-4 text-[16px] font-semibold">Roasted this week</h3>
-        <p class="mt-2 text-[14px] leading-relaxed text-muted">
-          Coffee leaves the roaster on Monday and your doorstep by Friday. Date on every bag.
-        </p>
+        <h3 class="mt-4 text-[16px] font-semibold">{T.values[1].title}</h3>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">{T.values[1].text}</p>
       </div>
       <div>
         <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-pine-soft text-pine">
@@ -103,64 +97,59 @@ const shelfImages: Record<string, string> = {
             <path d="M9 14 4 9l5-5" /><path d="M4 9h10a6 6 0 0 1 0 12h-3" />
           </svg>
         </span>
-        <h3 class="mt-4 text-[16px] font-semibold">Returns without forms</h3>
-        <p class="mt-2 text-[14px] leading-relaxed text-muted">
-          30 days, reply to your order email, done. If it's not right, it goes back.
-        </p>
+        <h3 class="mt-4 text-[16px] font-semibold">{T.values[2].title}</h3>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">{T.values[2].text}</p>
       </div>
     </div>
   </section>
 
   <!-- Quote -->
-  <section class="mx-auto max-w-3xl px-5 py-10 sm:py-10 text-center sm:py-16">
+  <section class="mx-auto max-w-3xl px-5 py-10 text-center sm:py-16">
     <blockquote class="font-display text-[clamp(22px,3vw,30px)] font-semibold leading-snug">
-      “The hoodie survived two winters and a hundred deploys.
-      The coffee is the reason the deploys shipped.”
+      {T.quote.text}
     </blockquote>
-    <p class="mt-4 text-[14px] text-muted">Jamie R., customer since 2024</p>
+    <p class="mt-4 text-[14px] text-muted">{T.quote.author}</p>
   </section>
 
   <!-- Theme colophon: this store is the product -->
   <section class="mx-auto max-w-6xl px-5 pb-4 sm:pb-8">
     <div class="grid gap-5 rounded-2xl border border-pine-deep bg-pine p-4 text-white sm:gap-10 sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
       <div>
-        <p class="text-[13px] font-medium text-white/70">njx-store · free ecommerce theme for Astro</p>
+        <p class="text-[13px] font-medium text-white/70">{T.colophon.eyebrow}</p>
         <h2 class="mt-3 font-display text-[clamp(26px,3.5vw,38px)] font-bold leading-tight tracking-tight">
-          This whole store is a theme. Take it.
+          {T.colophon.title}
         </h2>
-        <p class="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-white/85">
-          Everything you just clicked — cart, search, favorites, dark mode, checkout — is
-          njx-store Lite, a static storefront you can fork today. Point one env var at your
-          Shopify store and these same pages rebuild from your real catalog, hosted checkout included.
-        </p>
+        <p class="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-white/85">{T.colophon.text}</p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <a href="https://github.com/njbSaab/astro-njx-store" class="rounded-md bg-white px-6 py-3.5 text-[15px] font-semibold text-pine hover:bg-white/90">
-            Get the theme on GitHub
+          <a href={T.colophon.ctaPrimary.href} class="rounded-md bg-white px-6 py-3.5 text-[15px] font-semibold text-pine hover:bg-white/90">
+            {T.colophon.ctaPrimary.label}
           </a>
-          <a href="/about#theme" class="rounded-md border border-white/40 px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-white/10">
-            How it works
+          <a href={T.colophon.ctaSecondary.href} class="rounded-md border border-white/40 px-6 py-3.5 text-[15px] font-semibold text-white hover:bg-white/10">
+            {T.colophon.ctaSecondary.label}
           </a>
         </div>
       </div>
       <ul class="grid min-w-0 gap-3 rounded-xl bg-pine-deep/60 p-4 text-[14px] leading-relaxed sm:p-7">
-        <li class="flex gap-3"><span class="mt-0.5 text-white/60">01</span><span><strong class="font-semibold">Astro 5 + Tailwind v4</strong> — 18 static pages, zero client framework</span></li>
-        <li class="flex gap-3"><span class="mt-0.5 text-white/60">02</span><span><strong class="font-semibold">Node.js build</strong> — data layer runs at build time, ships pure HTML</span></li>
-        <li class="flex gap-3"><span class="mt-0.5 text-white/60">03</span><span><strong class="font-semibold">Shopify Storefront API</strong> — live products, cart and hosted checkout</span></li>
-        <li class="flex gap-3"><span class="mt-0.5 text-white/60">04</span><span><strong class="font-semibold">Cloudflare Pages</strong> — deploys in seconds on the free tier</span></li>
+        {T.colophon.stack.map((s, i) => (
+          <li class="flex gap-3">
+            <span class="mt-0.5 text-white/60">{String(i + 1).padStart(2, '0')}</span>
+            <span><strong class="font-semibold">{s.strong}</strong> {s.text}</span>
+          </li>
+        ))}
         <li>
           <button
             type="button"
-            data-copy-env="COMMERCE_PROVIDER=shopify"
+            data-copy-env={T.colophon.env.copyValue}
             class="group/copy mt-2 flex w-full items-center justify-between gap-3 rounded-md bg-black/25 px-4 py-2.5 text-left font-mono text-[13px] text-white/90 transition hover:bg-black/35"
-            aria-label="Copy COMMERCE_PROVIDER=shopify to clipboard"
+            aria-label={`Copy ${T.colophon.env.copyValue} to clipboard`}
           >
-            <span class="truncate">COMMERCE_PROVIDER=<span class="text-white">shopify</span></span>
+            <span>{T.colophon.env.prefix}<span class="text-white">{T.colophon.env.value}</span></span>
             <span data-copy-icon class="text-white/60 transition group-hover/copy:text-white">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" />
               </svg>
             </span>
-            <span data-copy-done class="hidden text-[12px] font-sans font-semibold text-white">Copied ✓</span>
+            <span data-copy-done class="hidden text-[12px] font-sans font-semibold text-white">{T.colophon.env.copiedLabel}</span>
           </button>
         </li>
       </ul>

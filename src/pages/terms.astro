@@ -1,41 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { TERMS as T } from '../constants/pages';
 ---
 
-<Layout title="Terms of Service — njX Shop" description="The short, honest terms for shopping at njX Shop: orders, shipping, returns and refunds.">
+<Layout title={T.meta.title} description={T.meta.description}>
   <section class="mx-auto max-w-3xl px-5 pb-8 sm:pb-16 pt-6 sm:pt-12">
-    <h1 class="font-display text-[clamp(32px,4vw,48px)] font-extrabold tracking-tight">Terms of Service</h1>
-    <p class="mt-2 text-[13px] text-muted">Last updated: September 2026 · Demo content — replace with your own terms.</p>
+    <h1 class="font-display text-[clamp(32px,4vw,48px)] font-extrabold tracking-tight">{T.title}</h1>
+    <p class="mt-2 text-[13px] text-muted">{T.updated}</p>
 
     <div class="mt-8 space-y-6 text-[15px] leading-relaxed text-muted">
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">Orders</h2>
-        <p>
-          An order is confirmed when you get the confirmation email. If something is out of
-          stock after you paid, we refund that item the same day and tell you.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">Shipping</h2>
-        <p>
-          We ship within 2 business days. Tracking arrives by email. If a package goes
-          missing, we deal with the carrier — not you.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">Returns & refunds</h2>
-        <p>
-          30 days, no questions, item in usable condition. Coffee is the exception once
-          opened — for obvious reasons. Refunds go back to the original payment method.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">The fine print</h2>
-        <p>
-          Prices can change, typos happen, and we may update these terms — the date above
-          always tells you when. Questions? The contacts page is one click away.
-        </p>
-      </div>
+      {T.sections.map((s) => (
+        <div>
+          <h2 class="mb-2 font-display text-lg font-bold text-ink">{s.h}</h2>
+          <p>{s.p}</p>
+        </div>
+      ))}
     </div>
   </section>
 </Layout>

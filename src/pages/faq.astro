@@ -1,43 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const FAQ = [
-  {
-    q: 'How long does shipping take?',
-    a: 'Orders leave the warehouse within 48 hours. US: 2–5 business days. EU and the rest of the world: 7–14 days. Free over $75, $6 flat otherwise, tracking always included.',
-  },
-  {
-    q: 'How do returns work?',
-    a: "30 days from delivery. Reply to your order email, we send a label, you drop it off. No forms and no questions beyond “what went wrong?” — that part genuinely helps us fix things.",
-  },
-  {
-    q: 'How do the tees fit?',
-    a: 'Boxy and true to size. If you are between sizes, take the smaller one — the 220 gsm cotton relaxes half a size after two washes.',
-  },
-  {
-    q: 'How fresh is the coffee, really?',
-    a: 'We roast on Mondays and ship the same week. The roast date is printed on every bag. If your bag is older than three weeks on arrival, write to us — it should not be.',
-  },
-  {
-    q: 'Do you do wholesale?',
-    a: 'For the desk goods and coffee — yes, from 20 units. Email hi@njx-shop.demo with your shop and volumes.',
-  },
-  {
-    q: 'Is this a real store?',
-    a: 'It is a demo for the astro-njx-store theme: the products are fictional, but everything else works — cart, checkout flow, search, themes. Grab the theme on GitHub and make it your real store.',
-  },
-];
+import { FAQ_PAGE as T } from '../constants/pages';
 ---
 
-<Layout title="FAQ — njX Shop" description="Shipping, returns, sizing and coffee freshness — answers to the questions we get most.">
+<Layout title={T.meta.title} description={T.meta.description}>
   <section class="mx-auto max-w-3xl px-5 pb-8 sm:pb-16 pt-6 sm:pt-12">
-    <h1 class="font-display text-[clamp(32px,5vw,52px)] font-extrabold tracking-tight">Questions we get</h1>
-    <p class="mt-3 text-[16px] leading-relaxed text-muted">
-      Short answers, no legal fog. Missing something? <a href="/contacts" class="text-pine underline underline-offset-2">Write to us.</a>
-    </p>
+    <h1 class="font-display text-[clamp(32px,5vw,52px)] font-extrabold tracking-tight">{T.title}</h1>
+    <p class="mt-3 text-[16px] leading-relaxed text-muted" set:html={T.introHtml} />
 
     <div class="mt-8 rounded-2xl border border-line bg-tile/40 px-6 sm:px-8">
-      {FAQ.map((item) => (
+      {T.items.map((item) => (
         <details class="group border-b border-line py-4 last:border-b-0">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-semibold">
             {item.q}

@@ -3,6 +3,7 @@
 // cart drawer (client-side, nanostores), footer.
 import '../styles/global.css';
 import { commerce, providerName } from '../lib/commerce';
+import { SITE, ANNOUNCEMENT, HEADER, SEARCH, FOOTER, THANKS_MODAL, CART, NAV_DRAWER } from '../constants/components';
 
 interface Props {
   title?: string;
@@ -10,12 +11,11 @@ interface Props {
 }
 
 const {
-  title = 'njX Shop — good gear for long builds',
-  description =
-    'Demo storefront for astro-njx-store: apparel, desk goods and coffee. Astro + Tailwind, mock data out of the box, Shopify with two env vars.',
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
 } = Astro.props;
 
-// Активный пункт меню: bg-tile/text-ink — токены, сами следуют теме
+// Active nav item: bg-tile/text-ink are tokens, they follow the theme automatically
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 const navCls = (href: string, base: string, active: string) =>
@@ -57,14 +57,14 @@ const searchIndex = JSON.stringify(
   </head>
   <body class="bg-paper font-sans text-ink antialiased" data-provider={providerName} data-search-index={searchIndex}>
     <p class="flex flex-wrap items-center justify-center gap-x-2 bg-pine px-4 py-2 text-center text-[13px] font-medium text-pine-soft">
-      <span>Free shipping on orders over $75 — roasted and packed every Monday</span>
+      <span>{ANNOUNCEMENT.text}</span>
       <span class="opacity-50">·</span>
       <a
-        href="https://github.com/njbSaab/astro-njx-store"
+        href={ANNOUNCEMENT.linkHref}
         target="_blank"
         rel="noopener"
         class="font-semibold text-white underline underline-offset-2 hover:opacity-90"
-      >Please ⭐️ on GitHub</a>
+      >{ANNOUNCEMENT.linkLabel}</a>
     </p>
 
     <header class="sticky top-2 z-40 mx-auto w-full max-w-6xl px-3 sm:top-3 sm:px-5">
@@ -72,12 +72,12 @@ const searchIndex = JSON.stringify(
       <nav class="flex h-14 items-center justify-between px-3 sm:h-16 sm:px-5">
         <div class="flex items-center gap-3">
           <a href="/" class="flex items-center gap-2.5">
-            <img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-8 w-8 rounded-lg" />
-            <img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-8 w-8 rounded-lg" />
-            <span class="font-display text-[21px] font-bold tracking-tight">njx-shop</span>
+            <img src={SITE.logoDark} alt="" class="logo-on-light h-8 w-8 rounded-lg" />
+            <img src={SITE.logoLight} alt="" class="logo-on-dark h-8 w-8 rounded-lg" />
+            <span class="font-display text-[21px] font-bold tracking-tight">{SITE.name}</span>
           </a>
-          <!-- на мобиле тема живёт в сайдбаре -->
-          <button id="theme-button" data-theme-toggle class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Toggle theme">
+          <!-- on mobile the theme toggle lives in the nav drawer -->
+          <button id="theme-button" data-theme-toggle class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label={HEADER.aria.theme}>
             <svg data-icon-moon width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
             </svg>
@@ -87,22 +87,22 @@ const searchIndex = JSON.stringify(
           </button>
         </div>
         <div class="hidden items-center gap-1 text-[15px] text-muted sm:flex">
-          <a href="/collections/apparel" class={navCls("/collections/apparel", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Apparel</a>
-          <a href="/collections/desk" class={navCls("/collections/desk", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Desk</a>
-          <a href="/collections/coffee" class={navCls("/collections/coffee", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Coffee</a>
+          {HEADER.navLinks.map((l) => (
+            <a href={l.href} class={navCls(l.href, "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>{l.label}</a>
+          ))}
         </div>
         <div class="flex items-center gap-1">
-        <button id="search-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Search" aria-expanded="false">
+        <button id="search-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label={HEADER.aria.search} aria-expanded="false">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
           </svg>
         </button>
-        <a href="/account" class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Account">
+        <a href="/account" class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label={HEADER.aria.account}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
           </svg>
         </a>
-        <a href="/favorites" class="relative hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Favorites">
+        <a href="/favorites" class="relative hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label={HEADER.aria.favorites}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20.5c-5.5-3.6-8.5-6.9-8.5-10.4A4.6 4.6 0 0 1 8.1 5.4c1.6 0 3 .8 3.9 2.1a4.7 4.7 0 0 1 3.9-2.1 4.6 4.6 0 0 1 4.6 4.7c0 3.5-3 6.8-8.5 10.4z" />
           </svg>
@@ -111,7 +111,7 @@ const searchIndex = JSON.stringify(
         <button
           id="cart-button"
           class="relative flex items-center gap-1.5 rounded-md border border-line px-3.5 py-2.5 hover:border-ink"
-          aria-label="Open cart"
+          aria-label={HEADER.aria.cart}
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1.4" />
@@ -123,7 +123,7 @@ const searchIndex = JSON.stringify(
             class="absolute -right-1.5 -top-1.5 hidden rounded-full bg-pine px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white"
           ></span>
         </button>
-        <button id="nav-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Open menu" aria-expanded="false">
+        <button id="nav-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label={HEADER.aria.menu} aria-expanded="false">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <path d="M3 5.5h14M3 10h14M3 14.5h14" />
           </svg>
@@ -140,14 +140,14 @@ const searchIndex = JSON.stringify(
             <input
               id="search-input"
               type="search"
-              placeholder="Search products…"
+              placeholder={SEARCH.placeholder}
               class="w-full bg-transparent py-3 text-[15px] outline-none placeholder:text-muted"
               autocomplete="off"
             />
-            <kbd class="hidden rounded border border-line px-1.5 py-0.5 text-[11px] text-muted sm:block">Esc</kbd>
+            <kbd class="hidden rounded border border-line px-1.5 py-0.5 text-[11px] text-muted sm:block">{SEARCH.escHint}</kbd>
           </div>
           <div id="search-results" class="hidden gap-4 py-5 sm:grid-cols-4"></div>
-          <p id="search-empty" class="hidden py-6 text-center text-[14px] text-muted">Nothing found — try “hoodie”, “walnut” or “coffee”.</p>
+          <p id="search-empty" class="hidden py-6 text-center text-[14px] text-muted">{SEARCH.emptyText}</p>
         </div>
       </div>
     </header>
@@ -158,47 +158,38 @@ const searchIndex = JSON.stringify(
       <div class="rounded-2xl border border-line bg-tile/60">
       <div class="grid gap-8 px-5 py-8 sm:grid-cols-[1.2fr_1fr] sm:gap-10 sm:px-10 sm:py-12">
         <div>
-          <p class="flex items-center gap-2 font-display text-xl font-bold"><img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-7 w-7 rounded-md" />njx-shop</p>
-          <p class="mt-3 max-w-[36ch] text-[14px] leading-relaxed text-muted">
-            Good gear for long builds. A demo store for the astro-njx-store theme —
-            every product here is fictional, the checkout is real.
-          </p>
+          <p class="flex items-center gap-2 font-display text-xl font-bold"><img src={SITE.logoDark} alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src={SITE.logoLight} alt="" class="logo-on-dark h-7 w-7 rounded-md" />{SITE.name}</p>
+          <p class="mt-3 max-w-[36ch] text-[14px] leading-relaxed text-muted">{FOOTER.tagline}</p>
         </div>
         <nav class="grid grid-cols-2 gap-8 text-[14px] sm:grid-cols-3" aria-label="Footer">
-          <div>
-            <p class="font-semibold">Shop</p>
-            <ul class="mt-3 space-y-2 text-muted">
-              <li><a href="/collections/apparel" class={navCls("/collections/apparel", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Apparel</a></li>
-              <li><a href="/collections/desk" class={navCls("/collections/desk", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Desk &amp; setup</a></li>
-              <li><a href="/collections/coffee" class={navCls("/collections/coffee", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Coffee</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-semibold">Pages</p>
-            <ul class="mt-3 space-y-2 text-muted">
-              <li><a href="/about" class={navCls("/about", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>About</a></li>
-              <li><a href="/contacts" class={navCls("/contacts", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Contacts</a></li>
-              <li><a href="/faq" class={navCls("/faq", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-semibold">Theme</p>
-            <ul class="mt-3 space-y-2 text-muted">
-              <li><a href="https://github.com/njbSaab/astro-njx-store" class="hover:text-ink hover:underline underline-offset-4">GitHub</a></li>
-              <li><a href="https://njxui.dev" class="hover:text-ink hover:underline underline-offset-4">Made by njX</a></li>
-              <li><a href="https://astro.build" class="hover:text-ink hover:underline underline-offset-4">Built with Astro</a></li>
-            </ul>
-          </div>
+          {FOOTER.columns.map((col) => (
+            <div>
+              <p class="font-semibold">{col.title}</p>
+              <ul class="mt-3 space-y-2 text-muted">
+                {col.links.map((l) => (
+                  <li>
+                    <a
+                      href={l.href}
+                      class={l.href.startsWith('/')
+                        ? navCls(l.href, "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")
+                        : "hover:text-ink hover:underline underline-offset-4"}
+                    >{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
       </div>
-      <!-- ── Built with: технологический стек темы ── -->
-      <!-- мобильный: колонкой снизу-вверх — логотипы сверху, соглашения внизу -->
+      <!-- ── Built with: the theme's tech stack ── -->
+      <!-- mobile: reversed column — logos on top, legal links below -->
       <div class="flex flex-col-reverse items-center gap-y-4 border-t border-line px-5 py-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-8 sm:px-10 sm:py-5">
         <div class="flex flex-wrap items-center gap-5 text-[13px] text-muted">
-          <a href="/privacy" class={navCls("/privacy", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Privacy Policy</a>
-          <a href="/terms" class={navCls("/terms", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Terms of Service</a>
+          {FOOTER.legalLinks.map((l) => (
+            <a href={l.href} class={navCls(l.href, "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>{l.label}</a>
+          ))}
         </div>
-        <!-- мобильный: сетка 3+2 с центрированным вторым рядом; sm+: один ряд -->
+        <!-- mobile: 3+2 grid with a centered second row; sm+: single row -->
         <div class="tech-row grid w-full grid-cols-6 items-center justify-items-center gap-y-3 sm:flex sm:w-auto sm:flex-wrap sm:gap-5">
           <img src="/tech/astro.png" alt="Astro" title="Astro" class="col-span-2 h-9 w-auto" loading="lazy" />
           <img src="/tech/tailwind.png" alt="Tailwind CSS" title="Tailwind CSS" class="col-span-2 h-7 w-auto" loading="lazy" />
@@ -214,23 +205,20 @@ const searchIndex = JSON.stringify(
     <div id="thanks-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-5">
       <div class="absolute inset-0 bg-ink/50" data-thanks-close></div>
       <div class="relative w-full max-w-sm rounded-xl bg-paper p-8 text-center shadow-2xl">
-        <p class="text-4xl">🎉</p>
-        <h3 class="mt-3 font-display text-2xl font-bold">Thanks for the order!</h3>
-        <p class="mt-2 text-[14px] leading-relaxed text-muted">
-          This is a demo store, so nothing was charged. If you like the theme,
-          a star takes two seconds and helps a lot.
-        </p>
+        <p class="text-4xl">{THANKS_MODAL.emoji}</p>
+        <h3 class="mt-3 font-display text-2xl font-bold">{THANKS_MODAL.title}</h3>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">{THANKS_MODAL.text}</p>
         <a
-          href="https://github.com/njbSaab/astro-njx-store"
+          href={THANKS_MODAL.starHref}
           target="_blank"
           rel="noopener"
           class="mt-5 block w-full rounded-md bg-pine py-3 text-[15px] font-semibold text-white hover:bg-pine-deep"
-        >⭐️ Star on GitHub</a>
+        >{THANKS_MODAL.starLabel}</a>
         <button data-thanks-close class="mt-2 w-full rounded-md py-2.5 text-[14px] text-muted hover:text-ink">
-          Keep browsing
+          {THANKS_MODAL.keepLabel}
         </button>
         <p class="mt-3 text-[12px] text-muted">
-          Made by <a href="https://njxui.dev" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink">njX UI</a>
+          Made by <a href={THANKS_MODAL.madeByHref} target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink">{THANKS_MODAL.madeByLabel}</a>
         </p>
       </div>
     </div>
@@ -240,29 +228,29 @@ const searchIndex = JSON.stringify(
     <aside
       id="cart-drawer"
       class="fixed bottom-4 right-4 top-4 z-50 flex w-[calc(100%-2rem)] max-w-md flex-col overflow-hidden rounded-2xl border border-line bg-paper shadow-2xl"
-      aria-label="Shopping cart"
+      aria-label={CART.ariaDrawer}
     >
       <div class="flex items-center justify-between border-b border-line px-6 py-5">
-        <h2 class="flex items-center gap-2 font-display text-xl font-bold"><img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-7 w-7 rounded-md" />njx-shop</h2>
+        <h2 class="flex items-center gap-2 font-display text-xl font-bold"><img src={SITE.logoDark} alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src={SITE.logoLight} alt="" class="logo-on-dark h-7 w-7 rounded-md" />{SITE.name}</h2>
         <div class="flex items-center gap-1">
-          <button id="cart-clear" class="hidden rounded-md px-2.5 py-2 text-[13px] text-muted hover:text-ink" aria-label="Clear cart">
-            Clear all
+          <button id="cart-clear" class="hidden rounded-md px-2.5 py-2 text-[13px] text-muted hover:text-ink" aria-label={CART.ariaClear}>
+            {CART.clearLabel}
           </button>
-          <button id="cart-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close cart">✕</button>
+          <button id="cart-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label={CART.ariaClose}>✕</button>
         </div>
       </div>
       <div id="cart-lines" class="flex-1 overflow-y-auto px-6 py-4"></div>
       <div class="border-t border-line px-6 py-5">
         <div class="flex items-center justify-between text-[15px]">
-          <span class="text-muted">Subtotal</span>
+          <span class="text-muted">{CART.subtotalLabel}</span>
           <span id="cart-subtotal" class="font-semibold">$0</span>
         </div>
-        <p class="mt-1 text-[13px] text-muted">Shipping and taxes calculated at checkout.</p>
+        <p class="mt-1 text-[13px] text-muted">{CART.shippingNote}</p>
         <button
           id="cart-checkout"
           class="mt-4 w-full rounded-md bg-pine py-3.5 text-[15px] font-semibold text-white hover:bg-pine-deep disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Checkout
+          {CART.checkoutLabel}
         </button>
         <p id="cart-note" class="mt-2 hidden text-center text-[13px] text-muted"></p>
       </div>
@@ -270,22 +258,22 @@ const searchIndex = JSON.stringify(
 
     <!-- ── Nav drawer ── -->
     <div id="nav-backdrop" class="fixed inset-0 z-40 bg-ink/40" aria-hidden="true"></div>
-    <aside id="nav-drawer" class="fixed bottom-4 right-4 top-4 z-50 flex w-[calc(100%-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-line bg-paper shadow-2xl" aria-label="Site navigation">
+    <aside id="nav-drawer" class="fixed bottom-4 right-4 top-4 z-50 flex w-[calc(100%-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-line bg-paper shadow-2xl" aria-label={NAV_DRAWER.ariaDrawer}>
       <div class="flex items-center justify-between border-b border-line px-4 py-4">
-        <h2 class="flex items-center gap-2 font-display text-xl font-bold"><img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-7 w-7 rounded-md" />njx-shop</h2>
-        <!-- действия иконками: избранное, аккаунт, тема -->
+        <h2 class="flex items-center gap-2 font-display text-xl font-bold"><img src={SITE.logoDark} alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src={SITE.logoLight} alt="" class="logo-on-dark h-7 w-7 rounded-md" />{SITE.name}</h2>
+        <!-- icon actions: favorites, account, theme -->
         <div class="flex items-center gap-0.5">
-          <a href="/favorites" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Favorites">
+          <a href="/favorites" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label={HEADER.aria.favorites}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 20.5c-5.5-3.6-8.5-6.9-8.5-10.4A4.6 4.6 0 0 1 8.1 5.4c1.6 0 3 .8 3.9 2.1a4.7 4.7 0 0 1 3.9-2.1 4.6 4.6 0 0 1 4.6 4.7c0 3.5-3 6.8-8.5 10.4z" />
             </svg>
           </a>
-          <a href="/account" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
+          <a href="/account" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label={HEADER.aria.account}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
             </svg>
           </a>
-          <button data-theme-toggle class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
+          <button data-theme-toggle class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label={HEADER.aria.theme}>
             <svg data-icon-moon width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
             </svg>
@@ -293,29 +281,30 @@ const searchIndex = JSON.stringify(
               <circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
             </svg>
           </button>
-          <button id="nav-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close menu">✕</button>
+          <button id="nav-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label={NAV_DRAWER.ariaClose}>✕</button>
         </div>
       </div>
       <nav class="flex-1 overflow-y-auto px-4 py-4 text-[16px] font-medium">
-        <a href="/" class={navCls("/", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>Home</a>
+        <a href={NAV_DRAWER.home.href} class={navCls(NAV_DRAWER.home.href, "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>{NAV_DRAWER.home.label}</a>
         <div class="mb-1 ml-3 border-l border-line pl-3">
-          <a href="/collections/apparel" class={navCls("/collections/apparel", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Apparel</a>
-          <a href="/collections/desk" class={navCls("/collections/desk", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Desk &amp; setup</a>
-          <a href="/collections/coffee" class={navCls("/collections/coffee", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Coffee</a>
+          {NAV_DRAWER.collections.map((l) => (
+            <a href={l.href} class={navCls(l.href, "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>{l.label}</a>
+          ))}
         </div>
-        <a href="/about" class={navCls("/about", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>About</a>
-        <a href="/contacts" class={navCls("/contacts", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>Contacts</a>
-        <a href="/faq" class={navCls("/faq", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>FAQ</a>
+        {NAV_DRAWER.pages.map((l) => (
+          <a href={l.href} class={navCls(l.href, "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>{l.label}</a>
+        ))}
       </nav>
       <div class="border-t border-line px-6 py-5 text-[13px] text-muted">
-        Built with <a href="https://njxui.dev" class="underline underline-offset-2 hover:text-ink">njX UI</a> ·
-        <a href="https://github.com/njbSaab/astro-njx-store" class="underline underline-offset-2 hover:text-ink">⭐ GitHub</a>
+        {NAV_DRAWER.footer.builtWithLabel} <a href={NAV_DRAWER.footer.libHref} class="underline underline-offset-2 hover:text-ink">{NAV_DRAWER.footer.libLabel}</a> ·
+        <a href={NAV_DRAWER.footer.starHref} class="underline underline-offset-2 hover:text-ink">{NAV_DRAWER.footer.starLabel}</a>
       </div>
     </aside>
 
     <script>
       import { cartLines, setQuantity, cartCount, cartTotal, clearCart } from '../lib/cart';
       import { favorites, toggleFavorite } from '../lib/favorites';
+      import { CART } from '../constants/components';
       import type { CartLine } from '../lib/commerce/types';
 
       const $ = (id: string) => document.getElementById(id)!;
@@ -335,7 +324,7 @@ const searchIndex = JSON.stringify(
         const box = $('cart-lines');
         if (!lines.length) {
           box.innerHTML =
-            '<p class="py-16 text-center text-[15px] text-muted">Your cart is empty.<br/>Everything ships free over $75.</p>';
+            `<p class="py-16 text-center text-[15px] text-muted">${CART.emptyLine1}<br/>${CART.emptyLine2}</p>`;
         } else {
           box.innerHTML = lines
             .map(
@@ -373,7 +362,7 @@ const searchIndex = JSON.stringify(
         document.body.classList.remove('cart-open');
       }
 
-      // ── Theme toggle: кнопка в хедере (desktop) + пункт в дровере (mobile) ──
+      // ── Theme toggle: header button (desktop) + drawer button (mobile) ──
       const themeToggles = document.querySelectorAll<HTMLElement>('[data-theme-toggle]');
       function syncThemeIcon() {
         const dark = document.documentElement.classList.contains('dark');
@@ -400,7 +389,7 @@ const searchIndex = JSON.stringify(
         JSON.parse(document.body.dataset.searchIndex!);
 
       function renderSearch(q: string) {
-        // пустой запрос — показываем весь каталог
+        // empty query — show the whole catalog
         const hits = q
           ? index.filter((p) => (p.title + ' ' + p.tags).toLowerCase().includes(q)).slice(0, 8)
           : index;
@@ -509,7 +498,7 @@ const searchIndex = JSON.stringify(
         }
         const btn = $('cart-checkout') as HTMLButtonElement;
         btn.disabled = true;
-        btn.textContent = 'Preparing checkout…';
+        btn.textContent = CART.checkoutPreparing;
         try {
           const res = await fetch(
             `https://${import.meta.env.PUBLIC_SHOPIFY_DOMAIN}/api/2025-07/graphql.json`,
@@ -534,10 +523,10 @@ const searchIndex = JSON.stringify(
           if (url) location.href = url;
           else throw new Error(json.data?.cartCreate?.userErrors?.[0]?.message ?? 'cartCreate failed');
         } catch (err) {
-          note.textContent = 'Checkout failed: ' + (err as Error).message;
+          note.textContent = CART.checkoutFailedPrefix + (err as Error).message;
           note.classList.remove('hidden');
           btn.disabled = false;
-          btn.textContent = 'Checkout';
+          btn.textContent = CART.checkoutLabel;
         }
       });
 

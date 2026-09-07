@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import { commerce } from '../../lib/commerce';
+import { PRODUCT as T } from '../../constants/pages';
 
 export async function getStaticPaths() {
   const products = await commerce.listProducts();
@@ -32,7 +33,7 @@ const imagesJson = JSON.stringify(images);
 
 <Layout title={`${product.title} — njX Shop`} description={product.description}>
   <nav class="mx-auto max-w-6xl px-5 pt-6 text-[13px] text-muted">
-    <a href="/" class="hover:text-ink">Home</a>
+    <a href="/" class="hover:text-ink">{T.breadcrumbHome}</a>
     <span class="mx-1.5">/</span>
     <a href={`/collections/${product.collectionHandles[0]}`} class="capitalize hover:text-ink">{product.collectionHandles[0]}</a>
     <span class="mx-1.5">/</span>
@@ -93,7 +94,7 @@ const imagesJson = JSON.stringify(images);
 
       {product.variants.length > 1 && (
         <fieldset class="mt-7" data-variant-picker>
-          <legend class="text-[14px] font-medium">Options</legend>
+          <legend class="text-[14px] font-medium">{T.optionsLegend}</legend>
           <div class="mt-2.5 flex flex-wrap gap-2">
             {product.variants.map((v) => (
               <button
@@ -138,7 +139,7 @@ const imagesJson = JSON.stringify(images);
           data-cart-line={cartLine}
           class="flex-1 rounded-md bg-pine py-3.5 text-[15px] font-semibold text-white hover:bg-pine-deep"
         >
-          Add to cart
+          {T.addToCart}
         </button>
         <button
           type="button"
@@ -153,29 +154,21 @@ const imagesJson = JSON.stringify(images);
       </div>
 
       <div class="mt-8 divide-y divide-line border-y border-line text-[14px]">
-        <details class="group py-3.5">
-          <summary class="flex cursor-pointer list-none items-center justify-between font-medium">
-            Shipping <span class="text-muted transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="pb-1 pt-2 leading-relaxed text-muted">
-            Free over $75, otherwise $6 flat. Orders leave the warehouse within 48 hours; tracking in your inbox the moment it ships.
-          </p>
-        </details>
-        <details class="group py-3.5">
-          <summary class="flex cursor-pointer list-none items-center justify-between font-medium">
-            Returns <span class="text-muted transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="pb-1 pt-2 leading-relaxed text-muted">
-            30 days from delivery. Reply to your order email and we'll send a label — no forms, no questions beyond "what went wrong?".
-          </p>
-        </details>
+        {T.accordion.map((item) => (
+          <details class="group py-3.5">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-medium">
+              {item.title} <span class="text-muted transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="pb-1 pt-2 leading-relaxed text-muted">{item.text}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>
 
   {related.length > 0 && (
     <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
-      <h2 class="font-display text-2xl font-bold tracking-tight">Goes well with</h2>
+      <h2 class="font-display text-2xl font-bold tracking-tight">{T.relatedTitle}</h2>
       <div class="mt-6 grid grid-cols-2 gap-x-5 gap-y-5 md:grid-cols-4">
         {related.map((p) => <ProductCard product={p} />)}
       </div>

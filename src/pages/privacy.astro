@@ -1,41 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { PRIVACY as T } from '../constants/pages';
 ---
 
-<Layout title="Privacy Policy — njX Shop" description="How njX Shop handles your data: what we collect, why, and what we never do.">
+<Layout title={T.meta.title} description={T.meta.description}>
   <section class="mx-auto max-w-3xl px-5 pb-8 sm:pb-16 pt-6 sm:pt-12">
-    <h1 class="font-display text-[clamp(32px,4vw,48px)] font-extrabold tracking-tight">Privacy Policy</h1>
-    <p class="mt-2 text-[13px] text-muted">Last updated: September 2026 · Demo content — replace with your own policy.</p>
+    <h1 class="font-display text-[clamp(32px,4vw,48px)] font-extrabold tracking-tight">{T.title}</h1>
+    <p class="mt-2 text-[13px] text-muted">{T.updated}</p>
 
     <div class="mt-8 space-y-6 text-[15px] leading-relaxed text-muted">
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">What we collect</h2>
-        <p>
-          Order details (what you bought, where to ship it), your email for order updates,
-          and basic analytics about how the store is used. That's the whole list.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">What we never do</h2>
-        <p>
-          We don't sell your data, we don't run third-party ad trackers, and we don't email
-          you unless it's about an order or you explicitly signed up for the newsletter.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">Payments</h2>
-        <p>
-          Card details never touch our servers — checkout is processed by our payment
-          provider. We see the order, not the card.
-        </p>
-      </div>
-      <div>
-        <h2 class="mb-2 font-display text-lg font-bold text-ink">Your rights</h2>
-        <p>
-          Want your data exported or deleted? Email us and it's done within 30 days —
-          usually much faster, there are three of us and one inbox.
-        </p>
-      </div>
+      {T.sections.map((s) => (
+        <div>
+          <h2 class="mb-2 font-display text-lg font-bold text-ink">{s.h}</h2>
+          <p>{s.p}</p>
+        </div>
+      ))}
     </div>
   </section>
 </Layout>

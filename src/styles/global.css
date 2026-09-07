@@ -47,8 +47,8 @@
   filter: none;
 }
 
-/* Built with: цветные логотипы стека; в dark — invert только тёмному знаку Astro,
-   у остальных цвета и так читаются на тёмном фоне */
+/* Built with: colored stack logos; in dark mode invert only Astro's dark mark —
+   the other logos stay readable on a dark background as-is */
 .tech-row img {
   transition: opacity 0.15s ease;
   opacity: 0.9;
@@ -59,7 +59,7 @@
 .dark .tech-row img[alt="Astro"],
 .dark .tech-row img[alt="Cloudflare"],
 .dark .tech-row img[alt="Node.js"] {
-  /* тёмные знаки → светлые; hue-rotate возвращает фирменным цветам родной тон */
+  /* dark marks → light; hue-rotate restores the brand colors' native hue */
   filter: invert(1) hue-rotate(180deg);
 }
 
@@ -109,7 +109,7 @@ body.nav-open {
 }
 #cart-drawer,
 #nav-drawer {
-  /* +1.5rem — карточка с отступом right-4 должна уехать полностью */
+  /* +1.5rem — the card sits at right-4, so it must slide fully off-screen */
   transform: translateX(calc(100% + 1.5rem));
   transition: transform 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 }
