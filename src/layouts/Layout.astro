@@ -90,8 +90,8 @@ const {
 
     <slot />
 
-    <footer class="mt-24 border-t border-line bg-tile/60">
-      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-3">
+    <footer class="border-t border-line bg-tile/60">
+      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-[1.2fr_1fr]">
         <div>
           <p class="font-display text-xl font-bold">Offhours</p>
           <p class="mt-3 max-w-[36ch] text-[14px] leading-relaxed text-muted">
@@ -99,22 +99,24 @@ const {
             every product here is fictional, the checkout is real.
           </p>
         </div>
-        <div class="text-[14px]">
-          <p class="font-semibold">Shop</p>
-          <ul class="mt-3 space-y-2 text-muted">
-            <li><a href="/collections/apparel" class="hover:text-ink">Apparel</a></li>
-            <li><a href="/collections/desk" class="hover:text-ink">Desk & setup</a></li>
-            <li><a href="/collections/coffee" class="hover:text-ink">Coffee</a></li>
-          </ul>
-        </div>
-        <div class="text-[14px]">
-          <p class="font-semibold">Theme</p>
-          <ul class="mt-3 space-y-2 text-muted">
-            <li><a href="https://github.com/njbSaab/astro-njx-store" class="hover:text-ink">astro-njx-store on GitHub</a></li>
-            <li><a href="https://njxui.dev" class="hover:text-ink">Made by njX</a></li>
-            <li><a href="https://astro.build" class="hover:text-ink">Built with Astro</a></li>
-          </ul>
-        </div>
+        <nav class="grid grid-cols-2 gap-8 text-[14px]" aria-label="Footer">
+          <div>
+            <p class="font-semibold">Shop</p>
+            <ul class="mt-3 space-y-2 text-muted">
+              <li><a href="/collections/apparel" class="hover:text-ink">Apparel</a></li>
+              <li><a href="/collections/desk" class="hover:text-ink">Desk & setup</a></li>
+              <li><a href="/collections/coffee" class="hover:text-ink">Coffee</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-semibold">Theme</p>
+            <ul class="mt-3 space-y-2 text-muted">
+              <li><a href="https://github.com/njbSaab/astro-njx-store" class="hover:text-ink">GitHub</a></li>
+              <li><a href="https://njxui.dev" class="hover:text-ink">Made by njX</a></li>
+              <li><a href="https://astro.build" class="hover:text-ink">Built with Astro</a></li>
+            </ul>
+          </div>
+        </nav>
       </div>
     </footer>
 
@@ -152,7 +154,12 @@ const {
     >
       <div class="flex items-center justify-between border-b border-line px-6 py-5">
         <h2 class="font-display text-xl font-bold">Your cart</h2>
-        <button id="cart-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close cart">✕</button>
+        <div class="flex items-center gap-1">
+          <button id="cart-clear" class="hidden rounded-md px-2.5 py-2 text-[13px] text-muted hover:text-ink" aria-label="Clear cart">
+            Clear all
+          </button>
+          <button id="cart-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close cart">✕</button>
+        </div>
       </div>
       <div id="cart-lines" class="flex-1 overflow-y-auto px-6 py-4"></div>
       <div class="border-t border-line px-6 py-5">
@@ -172,7 +179,7 @@ const {
     </aside>
 
     <script>
-      import { cartLines, setQuantity, cartCount, cartTotal } from '../lib/cart';
+      import { cartLines, setQuantity, cartCount, cartTotal, clearCart } from '../lib/cart';
       import type { CartLine } from '../lib/commerce/types';
 
       const $ = (id: string) => document.getElementById(id)!;
@@ -217,6 +224,7 @@ const {
         }
         $('cart-subtotal').textContent = money(cartTotal());
         ($('cart-checkout') as HTMLButtonElement).disabled = lines.length === 0;
+        $('cart-clear').classList.toggle('hidden', lines.length === 0);
       }
 
       function open() {
@@ -235,6 +243,7 @@ const {
 
       $('cart-button').addEventListener('click', open);
       $('cart-close').addEventListener('click', close);
+      $('cart-clear').addEventListener('click', clearCart);
       $('cart-backdrop').addEventListener('click', close);
       function closeThanks() {
         const modal = $('thanks-modal');

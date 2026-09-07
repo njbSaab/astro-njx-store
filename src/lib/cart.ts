@@ -26,6 +26,10 @@ export function setQuantity(variantId: string, quantity: number) {
   cartLines.set(lines);
 }
 
+export function clearCart() {
+  cartLines.set([]);
+}
+
 export function cartCount(): number {
   return cartLines.get().reduce((n, l) => n + l.quantity, 0);
 }
