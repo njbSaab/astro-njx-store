@@ -10,12 +10,38 @@ export async function getStaticPaths() {
 
 const { collection } = Astro.props;
 const products = await commerce.listProducts({ collection: collection.handle });
+const all = await commerce.listCollections();
 ---
 
-<Layout title={`${collection.title} — njX Store`} description={collection.description}>
-  <h1 class="text-3xl font-black">{collection.title}</h1>
-  <p class="mt-2 max-w-xl text-neutral-400">{collection.description}</p>
-  <div class="mt-8 grid grid-cols-2 gap-5 md:grid-cols-4">
-    {products.map((p) => <ProductCard product={p} />)}
-  </div>
+<Layout title={`${collection.title} — Offhours`} description={collection.description}>
+  <section class="mx-auto max-w-6xl px-5 pt-12">
+    <h1 class="font-display text-[clamp(32px,5vw,52px)] font-extrabold tracking-tight">{collection.title}</h1>
+    <p class="mt-3 max-w-[52ch] text-[16px] leading-relaxed text-muted">{collection.description}</p>
+
+    <div class="mt-7 flex flex-wrap gap-2 border-b border-line pb-6">
+      {all.filter((c) => c.handle !== 'frontpage').map((c) => (
+        <a
+          href={`/collections/${c.handle}`}
+          class:list={[
+            'rounded-md border px-4 py-2 text-[14px] transition',
+            c.handle === collection.handle
+              ? 'border-pine bg-pine-soft font-semibold'
+              : 'border-line text-muted hover:border-ink hover:text-ink',
+          ]}
+        >
+          {c.title}
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-10">
+    {products.length === 0 ? (
+      <p class="py-16 text-center text-muted">Nothing here yet — check the other collections.</p>
+    ) : (
+      <div class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-4">
+        {products.map((p) => <ProductCard product={p} />)}
+      </div>
+    )}
+  </section>
 </Layout>
