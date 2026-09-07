@@ -2,7 +2,7 @@
 // Offhours — base layout: announcement bar, header with live cart button,
 // cart drawer (client-side, nanostores), footer.
 import '../styles/global.css';
-import { providerName } from '../lib/commerce';
+import { commerce, providerName } from '../lib/commerce';
 
 interface Props {
   title?: string;
@@ -14,6 +14,17 @@ const {
   description =
     'Demo storefront for astro-njx-store: apparel, desk goods and coffee. Astro + Tailwind, mock data out of the box, Shopify with two env vars.',
 } = Astro.props;
+
+// Client-side search index (small catalog → inline JSON is the right tool)
+const searchIndex = JSON.stringify(
+  (await commerce.listProducts()).map((p) => ({
+    handle: p.handle,
+    title: p.title,
+    price: p.price.amount,
+    tags: p.tags.join(' '),
+    image: p.images[0]?.src ?? '',
+  })),
+);
 ---
 
 <!doctype html>
@@ -31,8 +42,14 @@ const {
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // restore theme before first paint (no flash)
+      if (localStorage.getItem('offhours-theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
   </head>
-  <body class="bg-paper font-sans text-ink antialiased" data-provider={providerName}>
+  <body class="bg-paper font-sans text-ink antialiased" data-provider={providerName} data-search-index={searchIndex}>
     <p class="flex flex-wrap items-center justify-center gap-x-2 bg-pine px-4 py-2 text-center text-[13px] font-medium text-pine-soft">
       <span>Free shipping on orders over $75 — roasted and packed every Monday</span>
       <span class="opacity-50">·</span>
@@ -64,6 +81,25 @@ const {
           <a href="/collections/desk" class="hover:text-ink">Desk</a>
           <a href="/collections/coffee" class="hover:text-ink">Coffee</a>
         </div>
+        <div class="flex items-center gap-1">
+        <button id="search-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Search" aria-expanded="false">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+          </svg>
+        </button>
+        <a href="/account" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+          </svg>
+        </a>
+        <button id="theme-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
+          <svg data-icon-moon width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+          <svg data-icon-sun class="hidden" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+          </svg>
+        </button>
         <button
           id="cart-button"
           class="relative flex items-center gap-1.5 rounded-md border border-line px-3.5 py-2.5 hover:border-ink"
@@ -79,7 +115,28 @@ const {
             class="hidden rounded-full bg-pine px-2 py-0.5 text-[12px] font-semibold text-white"
           ></span>
         </button>
+        </div>
       </nav>
+      <!-- search panel -->
+      <div id="search-panel" class="hidden border-t border-line bg-paper">
+        <div class="mx-auto max-w-6xl px-5 py-4">
+          <div class="flex items-center gap-3 rounded-md border border-line px-4 focus-within:border-pine">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="shrink-0 text-muted">
+              <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+            </svg>
+            <input
+              id="search-input"
+              type="search"
+              placeholder="Search products…"
+              class="w-full bg-transparent py-3 text-[15px] outline-none placeholder:text-muted"
+              autocomplete="off"
+            />
+            <kbd class="hidden rounded border border-line px-1.5 py-0.5 text-[11px] text-muted sm:block">Esc</kbd>
+          </div>
+          <div id="search-results" class="hidden gap-4 py-5 sm:grid-cols-4"></div>
+          <p id="search-empty" class="hidden py-6 text-center text-[14px] text-muted">Nothing found — try “hoodie”, “walnut” or “coffee”.</p>
+        </div>
+      </div>
       <!-- mobile menu -->
       <div id="mobile-menu" class="hidden border-t border-line bg-paper sm:hidden">
         <a href="/collections/apparel" class="block border-b border-line px-5 py-3.5 text-[16px] font-medium">Apparel</a>
@@ -234,6 +291,62 @@ const {
         document.body.classList.remove('cart-open');
       }
 
+      // ── Theme toggle ──
+      const themeBtn = $('theme-button');
+      function syncThemeIcon() {
+        const dark = document.documentElement.classList.contains('dark');
+        themeBtn.querySelector('[data-icon-moon]')!.classList.toggle('hidden', dark);
+        themeBtn.querySelector('[data-icon-sun]')!.classList.toggle('hidden', !dark);
+      }
+      themeBtn.addEventListener('click', () => {
+        const dark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('offhours-theme', dark ? 'dark' : 'light');
+        syncThemeIcon();
+      });
+      syncThemeIcon();
+
+      // ── Search ──
+      const searchPanel = $('search-panel');
+      const searchInput = $('search-input') as HTMLInputElement;
+      const searchResults = $('search-results');
+      const searchEmpty = $('search-empty');
+      const index: { handle: string; title: string; price: number; tags: string; image: string }[] =
+        JSON.parse(document.body.dataset.searchIndex!);
+
+      function toggleSearch(show?: boolean) {
+        const willShow = show ?? searchPanel.classList.contains('hidden');
+        searchPanel.classList.toggle('hidden', !willShow);
+        $('search-button').setAttribute('aria-expanded', String(willShow));
+        if (willShow) searchInput.focus();
+      }
+      $('search-button').addEventListener('click', () => toggleSearch());
+
+      searchInput.addEventListener('input', () => {
+        const q = searchInput.value.trim().toLowerCase();
+        if (!q) {
+          searchResults.classList.add('hidden');
+          searchResults.classList.remove('grid');
+          searchEmpty.classList.add('hidden');
+          return;
+        }
+        const hits = index.filter((p) => (p.title + ' ' + p.tags).toLowerCase().includes(q)).slice(0, 8);
+        searchEmpty.classList.toggle('hidden', hits.length > 0);
+        searchResults.classList.toggle('hidden', hits.length === 0);
+        searchResults.classList.toggle('grid', hits.length > 0);
+        searchResults.innerHTML = hits
+          .map(
+            (p) => `
+            <a href="/products/${p.handle}" class="group flex items-center gap-3 rounded-md p-2 hover:bg-tile">
+              <img src="${p.image}" alt="" class="h-14 w-14 rounded-md bg-tile object-cover"/>
+              <span class="min-w-0">
+                <span class="block truncate text-[14px] font-medium group-hover:underline group-hover:underline-offset-4">${p.title}</span>
+                <span class="text-[13px] text-muted">$${p.price}</span>
+              </span>
+            </a>`,
+          )
+          .join('');
+      });
+
       const menuBtn = document.getElementById('menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
       menuBtn?.addEventListener('click', () => {
@@ -255,6 +368,11 @@ const {
         if (e.key === 'Escape') {
           close();
           closeThanks();
+          toggleSearch(false);
+        }
+        if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          toggleSearch(true);
         }
       });
 
