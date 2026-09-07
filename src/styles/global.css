@@ -47,6 +47,12 @@
   filter: none;
 }
 
+/* Active favorite heart */
+[data-fav-toggle].is-fav svg {
+  fill: var(--color-pine);
+  stroke: var(--color-pine);
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -87,7 +93,8 @@ body.nav-open {
 }
 #cart-drawer,
 #nav-drawer {
-  transform: translateX(100%);
+  /* +1.5rem — карточка с отступом right-4 должна уехать полностью */
+  transform: translateX(calc(100% + 1.5rem));
   transition: transform 0.3s cubic-bezier(0.3, 0, 0.2, 1);
 }
 body.cart-open #cart-backdrop,
