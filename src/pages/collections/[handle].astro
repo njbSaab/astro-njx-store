@@ -11,10 +11,13 @@ export async function getStaticPaths() {
 const { collection } = Astro.props;
 const products = await commerce.listProducts({ collection: collection.handle });
 const all = await commerce.listCollections();
+
+// Теги этой коллекции — для клиентского фильтра
+const tags = [...new Set(products.flatMap((p) => p.tags))].sort();
 ---
 
 <Layout title={`${collection.title} — Offhours`} description={collection.description}>
-  <section class="mx-auto max-w-6xl px-5 pt-12">
+  <section class="mx-auto max-w-6xl px-5 pt-10 md:pt-12">
     <h1 class="font-display text-[clamp(32px,5vw,52px)] font-extrabold tracking-tight">{collection.title}</h1>
     <p class="mt-3 max-w-[52ch] text-[16px] leading-relaxed text-muted">{collection.description}</p>
 
@@ -23,7 +26,7 @@ const all = await commerce.listCollections();
         <a
           href={`/collections/${c.handle}`}
           class:list={[
-            'rounded-md border px-4 py-2 text-[14px] transition',
+            'rounded-md border px-4 py-2.5 text-[14px] transition',
             c.handle === collection.handle
               ? 'border-pine bg-pine-soft font-semibold'
               : 'border-line text-muted hover:border-ink hover:text-ink',
@@ -35,13 +38,94 @@ const all = await commerce.listCollections();
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-5 py-10">
+  <section class="mx-auto max-w-6xl px-5 py-8">
     {products.length === 0 ? (
       <p class="py-16 text-center text-muted">Nothing here yet — check the other collections.</p>
     ) : (
-      <div class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-4">
-        {products.map((p) => <ProductCard product={p} />)}
+      <div data-catalog>
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-6">
+          {tags.length > 1 ? (
+            <div class="flex flex-wrap gap-2" data-tag-filter role="group" aria-label="Filter by tag">
+              <button
+                type="button"
+                data-tag=""
+                aria-pressed="true"
+                class="rounded-full border border-line px-3.5 py-2 text-[13px] transition hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
+              >
+                All
+              </button>
+              {tags.map((t) => (
+                <button
+                  type="button"
+                  data-tag={t}
+                  aria-pressed="false"
+                  class="rounded-full border border-line px-3.5 py-2 text-[13px] capitalize transition hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
+                >
+                  {t.replace('-', ' ')}
+                </button>
+              ))}
+            </div>
+          ) : <span></span>}
+          <label class="flex items-center gap-2 text-[13px] text-muted">
+            Sort
+            <select data-sort class="rounded-md border border-line bg-paper px-3 py-2 text-[14px] text-ink">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
+              <option value="title">Name A–Z</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-4" data-grid>
+          {products.map((p, i) => (
+            <div data-card data-tags={p.tags.join(',')} data-price={p.price.amount} data-title={p.title} data-index={i}>
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
+        <p data-empty class="hidden py-16 text-center text-muted">No products match this filter.</p>
       </div>
     )}
   </section>
+
+  <script>
+    // Клиентский фильтр/сортировка по статичному гриду — без запросов.
+    const root = document.querySelector('[data-catalog]');
+    if (root) {
+      const grid = root.querySelector('[data-grid]')!;
+      const cards = [...grid.querySelectorAll<HTMLElement>('[data-card]')];
+      const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+      let activeTag = '';
+
+      function apply() {
+        let visible = 0;
+        for (const c of cards) {
+          const show = !activeTag || c.dataset.tags!.split(',').includes(activeTag);
+          c.classList.toggle('hidden', !show);
+          if (show) visible++;
+        }
+        empty.classList.toggle('hidden', visible > 0);
+      }
+
+      root.querySelector('[data-tag-filter]')?.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-tag]');
+        if (!btn) return;
+        activeTag = btn.dataset.tag!;
+        root.querySelectorAll('[data-tag]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        apply();
+      });
+
+      root.querySelector<HTMLSelectElement>('[data-sort]')?.addEventListener('change', (e) => {
+        const mode = (e.target as HTMLSelectElement).value;
+        const sorted = [...cards].sort((a, b) => {
+          if (mode === 'price-asc') return Number(a.dataset.price) - Number(b.dataset.price);
+          if (mode === 'price-desc') return Number(b.dataset.price) - Number(a.dataset.price);
+          if (mode === 'title') return a.dataset.title!.localeCompare(b.dataset.title!);
+          return Number(a.dataset.index) - Number(b.dataset.index);
+        });
+        sorted.forEach((c) => grid.appendChild(c));
+      });
+    }
+  </script>
 </Layout>

@@ -39,7 +39,19 @@ const {
 
     <header class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
       <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <a href="/" class="font-display text-[22px] font-bold tracking-tight">Offhours</a>
+        <div class="flex items-center gap-3">
+          <button
+            id="menu-button"
+            class="-ml-1 rounded-md p-2 hover:bg-tile sm:hidden"
+            aria-label="Open menu"
+            aria-expanded="false"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M3 5.5h14M3 10h14M3 14.5h14" />
+            </svg>
+          </button>
+          <a href="/" class="font-display text-[22px] font-bold tracking-tight">Offhours</a>
+        </div>
         <div class="hidden gap-7 text-[15px] text-muted sm:flex">
           <a href="/collections/apparel" class="hover:text-ink">Apparel</a>
           <a href="/collections/desk" class="hover:text-ink">Desk</a>
@@ -47,7 +59,7 @@ const {
         </div>
         <button
           id="cart-button"
-          class="relative rounded-md border border-line px-4 py-2 text-[14px] font-medium hover:border-ink"
+          class="relative rounded-md border border-line px-4 py-2.5 text-[14px] font-medium hover:border-ink"
           aria-label="Open cart"
         >
           Cart
@@ -57,6 +69,12 @@ const {
           ></span>
         </button>
       </nav>
+      <!-- mobile menu -->
+      <div id="mobile-menu" class="hidden border-t border-line bg-paper sm:hidden">
+        <a href="/collections/apparel" class="block border-b border-line px-5 py-3.5 text-[16px] font-medium">Apparel</a>
+        <a href="/collections/desk" class="block border-b border-line px-5 py-3.5 text-[16px] font-medium">Desk & setup</a>
+        <a href="/collections/coffee" class="block px-5 py-3.5 text-[16px] font-medium">Coffee</a>
+      </div>
     </header>
 
     <slot />
@@ -171,6 +189,13 @@ const {
       function close() {
         document.body.classList.remove('cart-open');
       }
+
+      const menuBtn = document.getElementById('menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn?.addEventListener('click', () => {
+        const hidden = mobileMenu!.classList.toggle('hidden');
+        menuBtn.setAttribute('aria-expanded', String(!hidden));
+      });
 
       $('cart-button').addEventListener('click', open);
       $('cart-close').addEventListener('click', close);
