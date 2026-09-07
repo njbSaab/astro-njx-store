@@ -472,12 +472,16 @@ const searchIndex = JSON.stringify(
         const el = (e.target as HTMLElement).closest('[data-cart-line]') as HTMLElement | null;
         if (!el) return;
         const line = JSON.parse(el.dataset.cartLine!) as CartLine;
-        const qtyInput = document.querySelector('[data-qty-input]') as HTMLInputElement | null;
-        line.quantity = qtyInput ? Math.max(1, Number(qtyInput.value)) : 1;
-        const picked = document.querySelector('[data-variant-picker] [aria-pressed="true"]') as HTMLElement | null;
-        if (picked) {
-          line.variantId = picked.dataset.variantId!;
-          line.variantTitle = picked.dataset.variantTitle!;
+        // PDP qty & variant picker apply ONLY to the main PDP button — a quick-add
+        // on a related-products card must not inherit another product's variant/qty.
+        if (!el.hasAttribute('data-quick-add')) {
+          const qtyInput = document.querySelector('[data-qty-input]') as HTMLInputElement | null;
+          line.quantity = qtyInput ? Math.max(1, Number(qtyInput.value)) : 1;
+          const picked = document.querySelector('[data-variant-picker] [aria-pressed="true"]') as HTMLElement | null;
+          if (picked) {
+            line.variantId = picked.dataset.variantId!;
+            line.variantTitle = picked.dataset.variantTitle!;
+          }
         }
         import('../lib/cart').then(({ addLine }) => {
           addLine(line);
