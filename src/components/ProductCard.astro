@@ -7,6 +7,17 @@ interface Props {
 const { product } = Astro.props;
 const img = product.images[0];
 const onSale = !!product.compareAtPrice;
+const firstAvailable = product.variants.find((v) => v.available) ?? product.variants[0];
+
+const cartLine = JSON.stringify({
+  variantId: firstAvailable?.id ?? product.id,
+  productHandle: product.handle,
+  title: product.title,
+  variantTitle: firstAvailable?.title ?? 'Default',
+  image: img,
+  price: product.price,
+  quantity: 1,
+});
 ---
 
 <a href={`/products/${product.handle}`} class="group block">
@@ -26,6 +37,16 @@ const onSale = !!product.compareAtPrice;
         Sale
       </span>
     )}
+    <button
+      type="button"
+      data-cart-line={cartLine}
+      data-quick-add
+      onclick="event.preventDefault()"
+      class="absolute inset-x-3 bottom-3 translate-y-2 rounded-md bg-paper/90 py-2.5 text-[14px] font-semibold text-ink opacity-0 shadow-sm backdrop-blur transition duration-200 hover:bg-pine hover:text-white focus-visible:translate-y-0 focus-visible:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+      aria-label={`Add ${product.title} to cart`}
+    >
+      Add to cart
+    </button>
   </div>
   <div class="mt-3 flex items-baseline justify-between gap-3">
     <h3 class="text-[15px] font-medium group-hover:underline group-hover:underline-offset-4">{product.title}</h3>
