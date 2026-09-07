@@ -15,6 +15,12 @@ const {
     'Demo storefront for astro-njx-store: apparel, desk goods and coffee. Astro + Tailwind, mock data out of the box, Shopify with two env vars.',
 } = Astro.props;
 
+// Активный пункт меню: bg-tile/text-ink — токены, сами следуют теме
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+const navCls = (href: string, base: string, active: string) =>
+  `${base} ${isActive(href) ? active : ""}`.trim();
+
 // Client-side search index (small catalog → inline JSON is the right tool)
 const searchIndex = JSON.stringify(
   (await commerce.listProducts()).map((p) => ({
@@ -61,16 +67,17 @@ const searchIndex = JSON.stringify(
       >Please ⭐️ on GitHub</a>
     </p>
 
-    <header class="sticky top-3 z-40 mx-auto w-full max-w-6xl px-5">
+    <header class="sticky top-2 z-40 mx-auto w-full max-w-6xl px-3 sm:top-3 sm:px-5">
       <div class="overflow-hidden rounded-2xl border border-line bg-paper/90 shadow-sm backdrop-blur">
-      <nav class="flex h-16 items-center justify-between px-5">
+      <nav class="flex h-14 items-center justify-between px-3 sm:h-16 sm:px-5">
         <div class="flex items-center gap-3">
           <a href="/" class="flex items-center gap-2.5">
             <img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-8 w-8 rounded-lg" />
             <img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-8 w-8 rounded-lg" />
             <span class="font-display text-[21px] font-bold tracking-tight">njx-shop</span>
           </a>
-          <button id="theme-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
+          <!-- на мобиле тема живёт в сайдбаре -->
+          <button id="theme-button" data-theme-toggle class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Toggle theme">
             <svg data-icon-moon width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
             </svg>
@@ -80,9 +87,9 @@ const searchIndex = JSON.stringify(
           </button>
         </div>
         <div class="hidden items-center gap-1 text-[15px] text-muted sm:flex">
-          <a href="/collections/apparel" class="rounded-md px-3 py-2 hover:bg-tile hover:text-ink">Apparel</a>
-          <a href="/collections/desk" class="rounded-md px-3 py-2 hover:bg-tile hover:text-ink">Desk</a>
-          <a href="/collections/coffee" class="rounded-md px-3 py-2 hover:bg-tile hover:text-ink">Coffee</a>
+          <a href="/collections/apparel" class={navCls("/collections/apparel", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Apparel</a>
+          <a href="/collections/desk" class={navCls("/collections/desk", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Desk</a>
+          <a href="/collections/coffee" class={navCls("/collections/coffee", "rounded-md px-3 py-2 hover:bg-tile hover:text-ink", "bg-tile text-ink")}>Coffee</a>
         </div>
         <div class="flex items-center gap-1">
         <button id="search-button" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Search" aria-expanded="false">
@@ -90,12 +97,12 @@ const searchIndex = JSON.stringify(
             <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
           </svg>
         </button>
-        <a href="/account" class="rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
+        <a href="/account" class="hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Account">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
           </svg>
         </a>
-        <a href="/favorites" class="relative rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink" aria-label="Favorites">
+        <a href="/favorites" class="relative hidden rounded-md p-2.5 text-muted hover:bg-tile hover:text-ink sm:block" aria-label="Favorites">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20.5c-5.5-3.6-8.5-6.9-8.5-10.4A4.6 4.6 0 0 1 8.1 5.4c1.6 0 3 .8 3.9 2.1a4.7 4.7 0 0 1 3.9-2.1 4.6 4.6 0 0 1 4.6 4.7c0 3.5-3 6.8-8.5 10.4z" />
           </svg>
@@ -147,9 +154,9 @@ const searchIndex = JSON.stringify(
 
     <slot />
 
-    <footer class="mx-auto w-full max-w-6xl px-5 pb-8">
+    <footer class="mx-auto w-full max-w-6xl px-3 pb-8 sm:px-5">
       <div class="rounded-2xl border border-line bg-tile/60">
-      <div class="grid gap-10 px-8 py-12 sm:grid-cols-[1.2fr_1fr] sm:px-10">
+      <div class="grid gap-8 px-5 py-8 sm:grid-cols-[1.2fr_1fr] sm:gap-10 sm:px-10 sm:py-12">
         <div>
           <p class="flex items-center gap-2 font-display text-xl font-bold"><img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-7 w-7 rounded-md" />njx-shop</p>
           <p class="mt-3 max-w-[36ch] text-[14px] leading-relaxed text-muted">
@@ -161,17 +168,17 @@ const searchIndex = JSON.stringify(
           <div>
             <p class="font-semibold">Shop</p>
             <ul class="mt-3 space-y-2 text-muted">
-              <li><a href="/collections/apparel" class="hover:text-ink hover:underline underline-offset-4">Apparel</a></li>
-              <li><a href="/collections/desk" class="hover:text-ink hover:underline underline-offset-4">Desk & setup</a></li>
-              <li><a href="/collections/coffee" class="hover:text-ink hover:underline underline-offset-4">Coffee</a></li>
+              <li><a href="/collections/apparel" class={navCls("/collections/apparel", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Apparel</a></li>
+              <li><a href="/collections/desk" class={navCls("/collections/desk", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Desk &amp; setup</a></li>
+              <li><a href="/collections/coffee" class={navCls("/collections/coffee", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Coffee</a></li>
             </ul>
           </div>
           <div>
             <p class="font-semibold">Pages</p>
             <ul class="mt-3 space-y-2 text-muted">
-              <li><a href="/about" class="hover:text-ink hover:underline underline-offset-4">About</a></li>
-              <li><a href="/contacts" class="hover:text-ink hover:underline underline-offset-4">Contacts</a></li>
-              <li><a href="/faq" class="hover:text-ink hover:underline underline-offset-4">FAQ</a></li>
+              <li><a href="/about" class={navCls("/about", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>About</a></li>
+              <li><a href="/contacts" class={navCls("/contacts", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Contacts</a></li>
+              <li><a href="/faq" class={navCls("/faq", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>FAQ</a></li>
             </ul>
           </div>
           <div>
@@ -185,17 +192,19 @@ const searchIndex = JSON.stringify(
         </nav>
       </div>
       <!-- ── Built with: технологический стек темы ── -->
-      <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-line px-8 py-5 sm:px-10">
+      <!-- мобильный: колонкой снизу-вверх — логотипы сверху, соглашения внизу -->
+      <div class="flex flex-col-reverse items-center gap-y-4 border-t border-line px-5 py-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-8 sm:px-10 sm:py-5">
         <div class="flex flex-wrap items-center gap-5 text-[13px] text-muted">
-          <a href="/privacy" class="hover:text-ink hover:underline underline-offset-4">Privacy Policy</a>
-          <a href="/terms" class="hover:text-ink hover:underline underline-offset-4">Terms of Service</a>
+          <a href="/privacy" class={navCls("/privacy", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Privacy Policy</a>
+          <a href="/terms" class={navCls("/terms", "hover:text-ink hover:underline underline-offset-4", "text-ink font-semibold underline")}>Terms of Service</a>
         </div>
-        <div class="tech-row flex flex-wrap items-center gap-7">
-          <img src="/tech/astro.png" alt="Astro" title="Astro" class="h-9 w-auto" loading="lazy" />
-          <img src="/tech/tailwind.png" alt="Tailwind CSS" title="Tailwind CSS" class="h-7 w-auto" loading="lazy" />
-          <img src="/tech/nodejs.png" alt="Node.js" title="Node.js" class="h-9 w-auto" loading="lazy" />
-          <img src="/tech/shopify.png" alt="Shopify" title="Shopify" class="h-9 w-auto" loading="lazy" />
-          <img src="/tech/cloudflare.png" alt="Cloudflare" title="Cloudflare" class="h-9 w-auto" loading="lazy" />
+        <!-- мобильный: сетка 3+2 с центрированным вторым рядом; sm+: один ряд -->
+        <div class="tech-row grid w-full grid-cols-6 items-center justify-items-center gap-y-3 sm:flex sm:w-auto sm:flex-wrap sm:gap-5">
+          <img src="/tech/astro.png" alt="Astro" title="Astro" class="col-span-2 h-9 w-auto" loading="lazy" />
+          <img src="/tech/tailwind.png" alt="Tailwind CSS" title="Tailwind CSS" class="col-span-2 h-7 w-auto" loading="lazy" />
+          <img src="/tech/nodejs.png" alt="Node.js" title="Node.js" class="col-span-2 h-9 w-auto" loading="lazy" />
+          <img src="/tech/shopify.png" alt="Shopify" title="Shopify" class="col-span-2 col-start-2 h-9 w-auto" loading="lazy" />
+          <img src="/tech/cloudflare.png" alt="Cloudflare" title="Cloudflare" class="col-span-2 h-9 w-auto" loading="lazy" />
         </div>
       </div>
       </div>
@@ -262,22 +271,41 @@ const searchIndex = JSON.stringify(
     <!-- ── Nav drawer ── -->
     <div id="nav-backdrop" class="fixed inset-0 z-40 bg-ink/40" aria-hidden="true"></div>
     <aside id="nav-drawer" class="fixed bottom-4 right-4 top-4 z-50 flex w-[calc(100%-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-line bg-paper shadow-2xl" aria-label="Site navigation">
-      <div class="flex items-center justify-between border-b border-line px-6 py-5">
+      <div class="flex items-center justify-between border-b border-line px-4 py-4">
         <h2 class="flex items-center gap-2 font-display text-xl font-bold"><img src="/logo/njx-shop-dark.png" alt="" class="logo-on-light h-7 w-7 rounded-md" /><img src="/logo/njx-shop-light.png" alt="" class="logo-on-dark h-7 w-7 rounded-md" />njx-shop</h2>
-        <button id="nav-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close menu">✕</button>
+        <!-- действия иконками: избранное, аккаунт, тема -->
+        <div class="flex items-center gap-0.5">
+          <a href="/favorites" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Favorites">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20.5c-5.5-3.6-8.5-6.9-8.5-10.4A4.6 4.6 0 0 1 8.1 5.4c1.6 0 3 .8 3.9 2.1a4.7 4.7 0 0 1 3.9-2.1 4.6 4.6 0 0 1 4.6 4.7c0 3.5-3 6.8-8.5 10.4z" />
+            </svg>
+          </a>
+          <a href="/account" class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Account">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+            </svg>
+          </a>
+          <button data-theme-toggle class="rounded-md p-2 text-muted hover:bg-tile hover:text-ink" aria-label="Toggle theme">
+            <svg data-icon-moon width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            </svg>
+            <svg data-icon-sun class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+            </svg>
+          </button>
+          <button id="nav-close" class="rounded-md p-2 text-muted hover:text-ink" aria-label="Close menu">✕</button>
+        </div>
       </div>
       <nav class="flex-1 overflow-y-auto px-4 py-4 text-[16px] font-medium">
-        <a href="/" class="block rounded-md px-3 py-3 hover:bg-tile">Home</a>
+        <a href="/" class={navCls("/", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>Home</a>
         <div class="mb-1 ml-3 border-l border-line pl-3">
-          <a href="/collections/apparel" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Apparel</a>
-          <a href="/collections/desk" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Desk &amp; setup</a>
-          <a href="/collections/coffee" class="block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink">Coffee</a>
+          <a href="/collections/apparel" class={navCls("/collections/apparel", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Apparel</a>
+          <a href="/collections/desk" class={navCls("/collections/desk", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Desk &amp; setup</a>
+          <a href="/collections/coffee" class={navCls("/collections/coffee", "block rounded-md px-3 py-2.5 text-[15px] text-muted hover:bg-tile hover:text-ink", "bg-tile !text-ink")}>Coffee</a>
         </div>
-        <a href="/about" class="block rounded-md px-3 py-3 hover:bg-tile">About</a>
-        <a href="/contacts" class="block rounded-md px-3 py-3 hover:bg-tile">Contacts</a>
-        <a href="/faq" class="block rounded-md px-3 py-3 hover:bg-tile">FAQ</a>
-        <a href="/favorites" class="block rounded-md px-3 py-3 hover:bg-tile">Favorites</a>
-        <a href="/account" class="block rounded-md px-3 py-3 hover:bg-tile">Account</a>
+        <a href="/about" class={navCls("/about", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>About</a>
+        <a href="/contacts" class={navCls("/contacts", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>Contacts</a>
+        <a href="/faq" class={navCls("/faq", "block rounded-md px-3 py-3 hover:bg-tile", "bg-tile font-semibold")}>FAQ</a>
       </nav>
       <div class="border-t border-line px-6 py-5 text-[13px] text-muted">
         Built with <a href="https://njxui.dev" class="underline underline-offset-2 hover:text-ink">njX UI</a> ·
@@ -345,18 +373,22 @@ const searchIndex = JSON.stringify(
         document.body.classList.remove('cart-open');
       }
 
-      // ── Theme toggle ──
-      const themeBtn = $('theme-button');
+      // ── Theme toggle: кнопка в хедере (desktop) + пункт в дровере (mobile) ──
+      const themeToggles = document.querySelectorAll<HTMLElement>('[data-theme-toggle]');
       function syncThemeIcon() {
         const dark = document.documentElement.classList.contains('dark');
-        themeBtn.querySelector('[data-icon-moon]')!.classList.toggle('hidden', dark);
-        themeBtn.querySelector('[data-icon-sun]')!.classList.toggle('hidden', !dark);
+        themeToggles.forEach((btn) => {
+          btn.querySelector('[data-icon-moon]')?.classList.toggle('hidden', dark);
+          btn.querySelector('[data-icon-sun]')?.classList.toggle('hidden', !dark);
+        });
       }
-      themeBtn.addEventListener('click', () => {
-        const dark = document.documentElement.classList.toggle('dark');
-        localStorage.setItem('njx-shop-theme', dark ? 'dark' : 'light');
-        syncThemeIcon();
-      });
+      themeToggles.forEach((btn) =>
+        btn.addEventListener('click', () => {
+          const dark = document.documentElement.classList.toggle('dark');
+          localStorage.setItem('njx-shop-theme', dark ? 'dark' : 'light');
+          syncThemeIcon();
+        })
+      );
       syncThemeIcon();
 
       // ── Search ──

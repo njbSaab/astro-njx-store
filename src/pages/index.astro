@@ -16,7 +16,7 @@ const shelfImages: Record<string, string> = {
 
 <Layout>
   <!-- Hero -->
-  <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-12 md:grid-cols-[1.1fr_1fr] md:pt-20">
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-4 pt-6 md:grid-cols-[1.1fr_1fr] md:pb-16 md:pt-20">
     <div>
       <h1 class="font-display text-[clamp(40px,6vw,72px)] font-extrabold leading-[0.98] tracking-tight">
         Good gear for long builds.
@@ -41,7 +41,7 @@ const shelfImages: Record<string, string> = {
   </section>
 
   <!-- Collections shelf -->
-  <section class="mx-auto max-w-6xl px-5 py-14">
+  <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
     <h2 class="font-display text-3xl font-bold tracking-tight">Shop by collection</h2>
     <div class="mt-7 grid gap-5 sm:grid-cols-3">
       {collections.filter((c) => shelfImages[c.handle]).map((c) => (
@@ -62,19 +62,19 @@ const shelfImages: Record<string, string> = {
   </section>
 
   <!-- Products -->
-  <section class="mx-auto max-w-6xl px-5 py-14">
+  <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
     <div class="flex items-baseline justify-between">
       <h2 class="font-display text-3xl font-bold tracking-tight">Everything we make</h2>
       <p class="text-[14px] text-muted">{products.length} products</p>
     </div>
-    <div class="mt-7 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-4">
+    <div class="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 md:grid-cols-4">
       {products.map((p) => <ProductCard product={p} />)}
     </div>
   </section>
 
   <!-- Values -->
-  <section class="mx-auto max-w-6xl px-5 pb-8">
-    <div class="grid gap-8 rounded-2xl border border-line bg-tile/60 p-8 sm:grid-cols-3 sm:p-10">
+  <section class="mx-auto max-w-6xl px-5 pb-4 sm:pb-8">
+    <div class="grid gap-4 rounded-2xl border border-line bg-tile/60 p-4 sm:grid-cols-3 sm:gap-8 sm:p-10">
       <div>
         <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-pine-soft text-pine">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -112,7 +112,7 @@ const shelfImages: Record<string, string> = {
   </section>
 
   <!-- Quote -->
-  <section class="mx-auto max-w-3xl px-5 py-16 text-center">
+  <section class="mx-auto max-w-3xl px-5 py-10 sm:py-10 text-center sm:py-16">
     <blockquote class="font-display text-[clamp(22px,3vw,30px)] font-semibold leading-snug">
       “The hoodie survived two winters and a hundred deploys.
       The coffee is the reason the deploys shipped.”
@@ -121,8 +121,8 @@ const shelfImages: Record<string, string> = {
   </section>
 
   <!-- Theme colophon: this store is the product -->
-  <section class="mx-auto max-w-6xl px-5 pb-8">
-    <div class="grid gap-10 rounded-2xl border border-pine-deep bg-pine p-8 text-white sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
+  <section class="mx-auto max-w-6xl px-5 pb-4 sm:pb-8">
+    <div class="grid gap-5 rounded-2xl border border-pine-deep bg-pine p-4 text-white sm:gap-10 sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
       <div>
         <p class="text-[13px] font-medium text-white/70">njx-store · free ecommerce theme for Astro</p>
         <h2 class="mt-3 font-display text-[clamp(26px,3.5vw,38px)] font-bold leading-tight tracking-tight">
@@ -142,7 +142,7 @@ const shelfImages: Record<string, string> = {
           </a>
         </div>
       </div>
-      <ul class="grid gap-3 rounded-xl bg-pine-deep/60 p-6 text-[14px] leading-relaxed sm:p-7">
+      <ul class="grid min-w-0 gap-3 rounded-xl bg-pine-deep/60 p-4 text-[14px] leading-relaxed sm:p-7">
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">01</span><span><strong class="font-semibold">Astro 5 + Tailwind v4</strong> — 18 static pages, zero client framework</span></li>
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">02</span><span><strong class="font-semibold">Node.js build</strong> — data layer runs at build time, ships pure HTML</span></li>
         <li class="flex gap-3"><span class="mt-0.5 text-white/60">03</span><span><strong class="font-semibold">Shopify Storefront API</strong> — live products, cart and hosted checkout</span></li>
@@ -154,7 +154,7 @@ const shelfImages: Record<string, string> = {
             class="group/copy mt-2 flex w-full items-center justify-between gap-3 rounded-md bg-black/25 px-4 py-2.5 text-left font-mono text-[13px] text-white/90 transition hover:bg-black/35"
             aria-label="Copy COMMERCE_PROVIDER=shopify to clipboard"
           >
-            <span>COMMERCE_PROVIDER=<span class="text-white">shopify</span></span>
+            <span class="truncate">COMMERCE_PROVIDER=<span class="text-white">shopify</span></span>
             <span data-copy-icon class="text-white/60 transition group-hover/copy:text-white">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" />

@@ -57,8 +57,9 @@
   opacity: 1;
 }
 .dark .tech-row img[alt="Astro"],
-.dark .tech-row img[alt="Cloudflare"] {
-  /* тёмные знаки → светлые; hue-rotate возвращает оранжевым деталям тёплый тон */
+.dark .tech-row img[alt="Cloudflare"],
+.dark .tech-row img[alt="Node.js"] {
+  /* тёмные знаки → светлые; hue-rotate возвращает фирменным цветам родной тон */
   filter: invert(1) hue-rotate(180deg);
 }
 
