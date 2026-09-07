@@ -33,8 +33,15 @@ const {
     />
   </head>
   <body class="bg-paper font-sans text-ink antialiased" data-provider={providerName}>
-    <p class="bg-pine px-4 py-2 text-center text-[13px] font-medium text-pine-soft">
-      Free shipping on orders over $75 — roasted and packed every Monday
+    <p class="flex flex-wrap items-center justify-center gap-x-2 bg-pine px-4 py-2 text-center text-[13px] font-medium text-pine-soft">
+      <span>Free shipping on orders over $75 — roasted and packed every Monday</span>
+      <span class="opacity-50">·</span>
+      <a
+        href="https://github.com/njbSaab/astro-njx-store"
+        target="_blank"
+        rel="noopener"
+        class="font-semibold text-white underline underline-offset-2 hover:opacity-90"
+      >Please ⭐️ on GitHub</a>
     </p>
 
     <header class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
@@ -59,13 +66,17 @@ const {
         </div>
         <button
           id="cart-button"
-          class="relative rounded-md border border-line px-4 py-2.5 text-[14px] font-medium hover:border-ink"
+          class="relative flex items-center gap-1.5 rounded-md border border-line px-3.5 py-2.5 hover:border-ink"
           aria-label="Open cart"
         >
-          Cart
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1.4" />
+            <circle cx="19" cy="21" r="1.4" />
+            <path d="M2.5 3h2l2.6 12.6a2 2 0 0 0 2 1.6h9.2a2 2 0 0 0 2-1.6L22 7H6" />
+          </svg>
           <span
             id="cart-count"
-            class="ml-1.5 hidden rounded-full bg-pine px-2 py-0.5 text-[12px] font-semibold text-white"
+            class="hidden rounded-full bg-pine px-2 py-0.5 text-[12px] font-semibold text-white"
           ></span>
         </button>
       </nav>
@@ -106,6 +117,31 @@ const {
         </div>
       </div>
     </footer>
+
+    <!-- ── Demo thank-you modal ── -->
+    <div id="thanks-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-5">
+      <div class="absolute inset-0 bg-ink/50" data-thanks-close></div>
+      <div class="relative w-full max-w-sm rounded-xl bg-paper p-8 text-center shadow-2xl">
+        <p class="text-4xl">🎉</p>
+        <h3 class="mt-3 font-display text-2xl font-bold">Thanks for the order!</h3>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">
+          This is a demo store, so nothing was charged. If you like the theme,
+          a star takes two seconds and helps a lot.
+        </p>
+        <a
+          href="https://github.com/njbSaab/astro-njx-store"
+          target="_blank"
+          rel="noopener"
+          class="mt-5 block w-full rounded-md bg-pine py-3 text-[15px] font-semibold text-white hover:bg-pine-deep"
+        >⭐️ Star on GitHub</a>
+        <button data-thanks-close class="mt-2 w-full rounded-md py-2.5 text-[14px] text-muted hover:text-ink">
+          Keep browsing
+        </button>
+        <p class="mt-3 text-[12px] text-muted">
+          Made by <a href="https://njxui.dev" target="_blank" rel="noopener" class="underline underline-offset-2 hover:text-ink">njX UI</a>
+        </p>
+      </div>
+    </div>
 
     <!-- ── Cart drawer ── -->
     <div id="cart-backdrop" class="fixed inset-0 z-40 bg-ink/40" aria-hidden="true"></div>
@@ -200,7 +236,18 @@ const {
       $('cart-button').addEventListener('click', open);
       $('cart-close').addEventListener('click', close);
       $('cart-backdrop').addEventListener('click', close);
-      document.addEventListener('keydown', (e) => e.key === 'Escape' && close());
+      function closeThanks() {
+        const modal = $('thanks-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      document.querySelectorAll('[data-thanks-close]').forEach((el) => el.addEventListener('click', closeThanks));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          close();
+          closeThanks();
+        }
+      });
 
       $('cart-lines').addEventListener('click', (e) => {
         const btn = (e.target as HTMLElement).closest('[data-qty]') as HTMLElement | null;
@@ -233,8 +280,10 @@ const {
         if (!lines.length) return;
         const note = $('cart-note');
         if (provider !== 'shopify') {
-          note.textContent = 'Demo mode — connect Shopify (two env vars) for a real checkout.';
-          note.classList.remove('hidden');
+          close();
+          const modal = $('thanks-modal');
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
           return;
         }
         const btn = $('cart-checkout') as HTMLButtonElement;

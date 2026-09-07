@@ -9,7 +9,8 @@ export async function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const img = product.images[0];
+const images = product.images;
+const img = images[0];
 const onSale = !!product.compareAtPrice;
 const firstAvailable = product.variants.find((v) => v.available) ?? product.variants[0];
 
@@ -26,6 +27,7 @@ const cartLine = JSON.stringify({
   price: product.price,
   quantity: 1,
 });
+const imagesJson = JSON.stringify(images);
 ---
 
 <Layout title={`${product.title} — Offhours`} description={product.description}>
@@ -37,15 +39,50 @@ const cartLine = JSON.stringify({
     <span class="text-ink">{product.title}</span>
   </nav>
 
-  <section class="mx-auto grid max-w-6xl gap-10 px-5 py-8 md:grid-cols-2 md:gap-14">
-    <div class="relative overflow-hidden rounded-xl bg-tile">
-      {img && <img src={img.src} alt={img.alt} class="aspect-square w-full object-cover" />}
-      {onSale && (
-        <span class="absolute left-4 top-4 rounded-md bg-ink px-3 py-1 text-[13px] font-semibold text-paper">Sale</span>
+  <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-8 md:grid-cols-2 md:gap-14">
+    <!-- Gallery: sticky, click opens lightbox -->
+    <div class="self-start md:sticky md:top-24" data-gallery data-images={imagesJson}>
+      <button
+        type="button"
+        class="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl bg-tile"
+        data-gallery-open
+        aria-label="Open image gallery"
+      >
+        {img && (
+          <img
+            src={img.src}
+            alt={img.alt}
+            data-gallery-main
+            class="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+          />
+        )}
+        {onSale && (
+          <span class="absolute left-4 top-4 rounded-md bg-ink px-3 py-1 text-[13px] font-semibold text-paper">Sale</span>
+        )}
+        <span class="absolute bottom-3 right-3 rounded-md bg-paper/85 p-2 text-ink opacity-0 backdrop-blur transition group-hover:opacity-100">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3M11 8v6M8 11h6" />
+          </svg>
+        </span>
+      </button>
+      {images.length > 1 && (
+        <div class="mt-3 flex gap-2.5">
+          {images.map((im, i) => (
+            <button
+              type="button"
+              data-thumb={i}
+              aria-pressed={i === 0}
+              class="w-20 overflow-hidden rounded-lg border-2 border-transparent bg-tile transition aria-pressed:border-pine"
+              aria-label={`Show image ${i + 1}`}
+            >
+              <img src={im.src} alt="" class="aspect-square w-full object-cover" loading="lazy" />
+            </button>
+          ))}
+        </div>
       )}
     </div>
 
-    <div class="md:py-4">
+    <div>
       <h1 class="font-display text-[clamp(28px,4vw,40px)] font-bold leading-tight tracking-tight">{product.title}</h1>
       <p class="mt-3 text-xl">
         {onSale && <s class="mr-2 text-[16px] text-muted">${product.compareAtPrice!.amount}</s>}
@@ -58,7 +95,7 @@ const cartLine = JSON.stringify({
         <fieldset class="mt-7" data-variant-picker>
           <legend class="text-[14px] font-medium">Options</legend>
           <div class="mt-2.5 flex flex-wrap gap-2">
-            {product.variants.map((v, i) => (
+            {product.variants.map((v) => (
               <button
                 type="button"
                 class:list={[
@@ -134,4 +171,72 @@ const cartLine = JSON.stringify({
       </div>
     </section>
   )}
+
+  <!-- ── Lightbox ── -->
+  <div id="lightbox" class="fixed inset-0 z-[70] hidden items-center justify-center">
+    <div class="absolute inset-0 bg-ink/80" data-lb-close></div>
+    <figure class="relative z-10 w-full max-w-3xl px-5">
+      <img data-lb-img src="" alt="" class="max-h-[80vh] w-full rounded-xl object-contain" />
+      <figcaption data-lb-count class="mt-3 text-center text-[13px] text-paper/70"></figcaption>
+    </figure>
+    <button data-lb-close class="absolute right-5 top-5 z-10 rounded-md bg-paper/10 p-2.5 text-paper hover:bg-paper/20" aria-label="Close gallery">✕</button>
+    <button data-lb-prev class="absolute left-4 z-10 hidden rounded-md bg-paper/10 px-3.5 py-3 text-xl text-paper hover:bg-paper/20" aria-label="Previous image">‹</button>
+    <button data-lb-next class="absolute right-4 z-10 hidden rounded-md bg-paper/10 px-3.5 py-3 text-xl text-paper hover:bg-paper/20" aria-label="Next image">›</button>
+  </div>
+
+  <script>
+    const gallery = document.querySelector<HTMLElement>('[data-gallery]');
+    if (gallery) {
+      const images: { src: string; alt: string }[] = JSON.parse(gallery.dataset.images!);
+      const main = gallery.querySelector<HTMLImageElement>('[data-gallery-main]')!;
+      const lb = document.getElementById('lightbox')!;
+      const lbImg = lb.querySelector<HTMLImageElement>('[data-lb-img]')!;
+      const lbCount = lb.querySelector<HTMLElement>('[data-lb-count]')!;
+      const prev = lb.querySelector<HTMLElement>('[data-lb-prev]')!;
+      const next = lb.querySelector<HTMLElement>('[data-lb-next]')!;
+      let i = 0;
+
+      function setMain(idx: number) {
+        i = (idx + images.length) % images.length;
+        main.src = images[i].src;
+        main.alt = images[i].alt;
+        gallery.querySelectorAll('[data-thumb]').forEach((t) =>
+          t.setAttribute('aria-pressed', String(Number((t as HTMLElement).dataset.thumb) === i)),
+        );
+      }
+      function syncLb() {
+        lbImg.src = images[i].src;
+        lbImg.alt = images[i].alt;
+        lbCount.textContent = `${i + 1} / ${images.length}`;
+        const many = images.length > 1;
+        prev.classList.toggle('hidden', !many);
+        next.classList.toggle('hidden', !many);
+      }
+      function openLb() {
+        syncLb();
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLb() {
+        lb.classList.add('hidden');
+        lb.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      gallery.querySelector('[data-gallery-open]')!.addEventListener('click', openLb);
+      gallery.querySelectorAll<HTMLElement>('[data-thumb]').forEach((t) =>
+        t.addEventListener('click', () => setMain(Number(t.dataset.thumb))),
+      );
+      lb.querySelectorAll('[data-lb-close]').forEach((el) => el.addEventListener('click', closeLb));
+      prev.addEventListener('click', () => { setMain(i - 1); syncLb(); });
+      next.addEventListener('click', () => { setMain(i + 1); syncLb(); });
+      document.addEventListener('keydown', (e) => {
+        if (lb.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeLb();
+        if (e.key === 'ArrowLeft') { setMain(i - 1); syncLb(); }
+        if (e.key === 'ArrowRight') { setMain(i + 1); syncLb(); }
+      });
+    }
+  </script>
 </Layout>
