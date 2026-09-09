@@ -38,6 +38,15 @@ const shelfImages: Record<string, string> = {
     </div>
   </section>
 
+  <!-- Theme bar: quiet strip under the hero -->
+  <div class="border-y border-line bg-tile/50">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-1 px-5 py-3 text-[13px] text-muted">
+      <span>{T.themeBar.text}</span>
+      <a href={T.themeBar.cta.href} class="font-semibold text-ink underline underline-offset-4 hover:text-pine">{T.themeBar.cta.label}</a>
+      <a href={T.themeBar.cta2.href} class="font-semibold text-ink underline underline-offset-4 hover:text-pine">{T.themeBar.cta2.label}</a>
+    </div>
+  </div>
+
   <!-- Collections shelf -->
   <section class="mx-auto max-w-6xl px-5 py-4 sm:py-14">
     <h2 class="font-display text-3xl font-bold tracking-tight">{T.collections.title}</h2>

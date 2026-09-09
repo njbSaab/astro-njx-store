@@ -16,6 +16,11 @@ export const HOME = {
     note: 'Ships worldwide from one small warehouse. 30-day returns, no forms.',
     image: { src: '/products/hero.jpg', alt: 'Walnut desk setup with laptop and coffee' },
   },
+  themeBar: {
+    text: 'This store is a free Astro theme.',
+    cta: { label: 'Get it on GitHub', href: SITE.repoUrl },
+    cta2: { label: 'All themes & Pro', href: SITE.themesUrl },
+  },
   collections: { title: 'Shop by collection' },
   products: { title: 'Everything we make', countLabel: 'products' },
   values: [
